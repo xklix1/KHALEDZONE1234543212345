@@ -681,7 +681,7 @@
 
 <script>
 // ──── STORAGE ────
-const KEYS = { products: 'khaled_zone_products', orders: 'khaled_zone_orders', settings: 'khaled_zone_settings' };
+const KEYS = { products: 'khaled_zone_products', orders: 'khaled_zone_orders', settings: 'khaled_zone_settings', coupons: 'khaled_zone_coupons' };
 
 const DEFAULT_PRODUCTS = [
   { id:'gta5-account', title:'GTA 5 Account', subTitle:'GTA V Premium + Online', price:120, oldPrice:160, badge:'الأكثر مبيعاً 🔥', image:'assets/gta5_cover.svg', category:'accounts', rating:'4.9 ★', features:['تفعيل فوري ⚡','ضمان مدى الحياة 🛡️','تغيير كامل البيانات 🔑'] },
@@ -1051,9 +1051,12 @@ function renderCoupons() {
   if (!tb) return;
 
   // Stats
-  document.getElementById('cpn-stat-total').textContent = coupons.length;
-  document.getElementById('cpn-stat-active').textContent = coupons.filter(c => c.active).length;
-  document.getElementById('cpn-stat-uses').textContent = coupons.reduce((s, c) => s + (c.usedCount || 0), 0);
+  const elTotal  = document.getElementById('cpn-stat-total');
+  const elActive = document.getElementById('cpn-stat-active');
+  const elUses   = document.getElementById('cpn-stat-uses');
+  if (elTotal)  elTotal.textContent  = coupons.length;
+  if (elActive) elActive.textContent = coupons.filter(c => c.active).length;
+  if (elUses)   elUses.textContent   = coupons.reduce((s, c) => s + (c.usedCount || 0), 0);
 
   // Cards Showcase
   if (cardsGrid) {
