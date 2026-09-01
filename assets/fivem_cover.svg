@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1a0505"/>
+      <stop offset="50%" stop-color="#3a0f0f"/>
+      <stop offset="100%" stop-color="#050b14"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg2)"/>
+  <polygon points="200,70 320,280 80,280" fill="none" stroke="#ff6b00" stroke-width="6" stroke-linejoin="round"/>
+  <text x="200" y="200" font-family="Impact, sans-serif" font-size="44" fill="#ffffff" text-anchor="middle">FiveM</text>
+  <text x="200" y="240" font-family="Arial, sans-serif" font-size="18" fill="#ff6b00" text-anchor="middle">FiveM Fliccount</text>
+  <text x="200" y="320" font-family="Arial, sans-serif" font-size="16" fill="#00f0ff" text-anchor="middle">FiveM حساب</text>
+</svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg4" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1b003a"/>
+      <stop offset="50%" stop-color="#4a0080"/>
+      <stop offset="100%" stop-color="#00f0ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg4)"/>
+  <text x="200" y="170" font-family="Impact, sans-serif" font-size="48" fill="#00f0ff" text-anchor="middle">FORTNITE</text>
+  <text x="200" y="220" font-family="Arial, sans-serif" font-size="20" fill="#ffffff" text-anchor="middle">Fortnite Account</text>
+  <polygon points="200,260 220,310 270,310 230,340 250,390 200,360 150,390 170,340 130,310 180,310" fill="#ffd700" opacity="0.8"/>
+</svg>

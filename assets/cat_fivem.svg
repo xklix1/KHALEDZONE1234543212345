@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" viewBox="0 0 400 300">
+  <defs>
+    <linearGradient id="cbg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050b14"/>
+      <stop offset="100%" stop-color="#1a0826"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="300" fill="url(#cbg)"/>
+  <polygon points="200,40 310,240 90,240" fill="none" stroke="#ff6b00" stroke-width="8" stroke-linejoin="round"/>
+  <circle cx="200" cy="150" r="40" fill="rgba(0,240,255,0.2)" stroke="#00f0ff" stroke-width="2"/>
+  <text x="200" y="160" font-family="Impact, sans-serif" font-size="36" fill="#ffffff" text-anchor="middle">FiveM</text>
+</svg>

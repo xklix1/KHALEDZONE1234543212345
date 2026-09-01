@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="400" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="bg3" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2b0000"/>
+      <stop offset="50%" stop-color="#5c0d0d"/>
+      <stop offset="100%" stop-color="#050b14"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" fill="url(#bg3)"/>
+  <text x="200" y="160" font-family="Impact, sans-serif" font-size="58" fill="#ff3333" text-anchor="middle" letter-spacing="4">RDR2</text>
+  <text x="200" y="210" font-family="Arial, sans-serif" font-size="18" fill="#ffffff" text-anchor="middle">Red Dead Redemption II</text>
+  <text x="200" y="250" font-family="Arial, sans-serif" font-size="16" fill="#ffd700" text-anchor="middle">RDR2 Account</text>
+  <path d="M150,310 L250,310 M200,280 L200,340" stroke="#ff3333" stroke-width="4"/>
+</svg>
