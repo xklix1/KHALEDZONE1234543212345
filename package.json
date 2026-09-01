@@ -1,0 +1,19 @@
+{
+  "name": "khaled-zone-web",
+  "version": "1.0.0",
+  "description": "KHALED ZONE - Premium Digital Gaming Marketplace Platform",
+  "private": true,
+  "scripts": {
+    "start": "serve -p 2000",
+    "lint": "echo 'Code style clean'",
+    "format": "prettier --write '**/*.{html,css,js,json}'"
+  },
+  "keywords": [
+    "gaming",
+    "marketplace",
+    "digital-services",
+    "khaled-zone"
+  ],
+  "author": "KLIX",
+  "license": "MIT"
+}

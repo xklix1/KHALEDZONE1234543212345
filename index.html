@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>KHALED ZONE | متجر الخدمات والحسابات الرقمية بالألعاب</title>
   
-  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -34,22 +33,17 @@
     }
   </script>
   
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-family/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-  <!-- Custom CSS -->
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-[#050b14] text-white min-h-screen selection:bg-cyan-500 selection:text-black">
 
-  <!-- TOP NAVIGATION BAR -->
   <header class="sticky top-0 z-40 bg-[#050b14]/80 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
-      <!-- Top Right: Logo "BLUE ZONE / KHALED ZONE" with Golden Crown -->
       <div class="flex items-center gap-3">
-        <a href="#" class="flex items-center gap-2 group">
+        <a href="/" class="flex items-center gap-2 group">
           <div class="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-900 to-cyan-500 p-0.5 shadow-[0_0_15px_rgba(0,240,255,0.5)]">
             <div class="w-full h-full bg-[#050b14] rounded-[10px] flex items-center justify-center relative">
               <span class="text-2xl crown-pulse">👑</span>
@@ -68,9 +62,7 @@
         </a>
       </div>
 
-      <!-- Top Center: Navigation Menu Items in Arabic -->
       <nav class="hidden md:flex items-center gap-2 lg:gap-4 font-bold text-sm">
-        <!-- Glowing Blue Outline Button for Active Page "الرئيسية" -->
         <a href="/" class="btn-glowing-outline px-5 py-2 rounded-xl transition">
           الرئيسية
         </a>
@@ -91,21 +83,16 @@
         </a>
       </nav>
 
-      <!-- Top Left: Search & Cart Icon with Badge + Environmental Text -->
       <div class="flex items-center gap-3">
-        
-        <!-- Text Resembling "بيئة المقربات / بئنه المقبريات" -->
         <div class="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-navy-800/80 border border-cyan-500/30 text-xs font-semibold text-cyan-300">
           <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
           <span>بيئة المقربات الرقمية</span>
         </div>
 
-        <!-- Search Icon Button -->
         <button onclick="toggleSearchModal()" class="w-10 h-10 rounded-xl bg-navy-800/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400 hover:bg-cyan-500 hover:text-black transition shadow-[0_0_10px_rgba(0,240,255,0.2)]">
           <i class="bi bi-search text-lg"></i>
         </button>
 
-        <!-- Cart Button with Badge "0" -->
         <button onclick="toggleCart()" class="relative w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-900 to-blue-600 p-0.5 shadow-[0_0_15px_rgba(0,240,255,0.4)] hover:scale-105 transition">
           <div class="w-full h-full bg-[#050b14] rounded-[10px] flex items-center justify-center text-cyan-400">
             <i class="bi bi-cart3 text-xl"></i>
@@ -115,7 +102,6 @@
           </span>
         </button>
 
-        <!-- Mobile Menu Toggle Button -->
         <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden w-10 h-10 rounded-xl bg-navy-800 border border-cyan-500/30 text-white flex items-center justify-center">
           <i class="bi bi-list text-2xl"></i>
         </button>
@@ -123,7 +109,6 @@
 
     </div>
 
-    <!-- Mobile Dropdown Menu -->
     <div id="mobile-menu" class="hidden md:hidden bg-[#050b14]/95 border-b border-cyan-500/30 px-4 py-4 space-y-2">
       <a href="/" class="block py-2 text-cyan-400 font-bold">الرئيسية</a>
       <a href="/store" class="block py-2 text-gray-300">المتجر</a>
@@ -134,28 +119,17 @@
     </div>
   </header>
 
-
-  <!-- HERO BANNER SECTION -->
   <section id="hero" class="relative py-12 lg:py-20 overflow-hidden bg-gradient-to-b from-[#050b14] via-[#0a1326] to-[#050b14]">
-    
-    <!-- Background Glow Orbs -->
     <div class="absolute top-1/4 right-1/4 w-96 h-96 bg-cyan-500/15 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-10 left-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-      
-      <!-- Master Hero Artwork Container -->
       <div class="relative rounded-3xl overflow-hidden border-2 border-cyan-500/40 shadow-[0_0_50px_rgba(0,240,255,0.25)] group">
-        
-        <!-- Hero Image / Banner -->
         <img src="assets/hero_banner.jpg" alt="KHALED ZONE Hero Banner" class="w-full h-[480px] sm:h-[550px] lg:h-[620px] object-cover object-center filter brightness-95 group-hover:scale-102 transition duration-700">
 
-        <!-- Dark Gradient & CTA Buttons Overlay -->
         <div class="absolute inset-0 bg-gradient-to-t from-[#050b14]/90 via-transparent to-transparent flex flex-col justify-end p-6 sm:p-10">
-          
-          <!-- Action Buttons Only -->
           <div class="flex flex-wrap items-center justify-center sm:justify-start gap-4">
-            <a href="#products" class="btn-neon-solid px-8 py-3.5 rounded-xl flex items-center gap-3 text-base shadow-[0_0_25px_rgba(0,240,255,0.6)]">
+            <a href="/store" class="btn-neon-solid px-8 py-3.5 rounded-xl flex items-center gap-3 text-base shadow-[0_0_25px_rgba(0,240,255,0.6)]">
               <span>تصفح المنتجات الآن</span>
               <i class="bi bi-arrow-left text-lg"></i>
             </a>
@@ -164,20 +138,13 @@
               <span>الدعم الفني</span>
             </a>
           </div>
-
         </div>
-
       </div>
-
     </div>
   </section>
 
-
-  <!-- CATEGORY CARDS SECTION (3 Glassmorphism Cards) -->
   <section id="categories" class="py-16 bg-[#050b14] relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Section Title -->
       <div class="text-center mb-12">
         <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight flex items-center justify-center gap-3">
           <span>أقسام الخدمات والمنتجات</span>
@@ -186,13 +153,8 @@
         <p class="text-gray-400 text-sm mt-2">اختر القسم الذي تريد تصفحه للحصول على أفضل العروض والأسعار</p>
       </div>
 
-      <!-- Horizontal Grid of 3 Category Cards -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        
-        <!-- CARD 1 (Left Card): Gaming Controller & Gear Icon -->
         <div class="glass-panel glass-panel-hover rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group">
-          <div class="absolute -top-10 -left-10 w-32 h-32 bg-orange-500/20 rounded-full blur-2xl group-hover:bg-orange-500/30 transition"></div>
-          
           <div class="space-y-4 relative z-10">
             <div class="h-48 rounded-2xl overflow-hidden border border-cyan-500/30 relative">
               <img src="assets/cat_services.jpg" alt="خدمات الألعاب" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
@@ -208,23 +170,20 @@
                 <span>خدمات الألعاب</span>
               </h3>
               <p class="text-xs text-gray-400 leading-relaxed">
-                شحن كروت بالألعاب، تجميع نقاط، واشتراكات مدفوعة مع ضمان شامل ودعم فني متاح 24 ساعة.
+                شحن كروت بالألعاب، تجميع نقاط، وااشتراكات مدفوعة مع ضمان شامل ودعم فني متاح 24 ساعة.
               </p>
             </div>
           </div>
 
           <div class="pt-6 relative z-10">
-            <a href="#products" class="w-full btn-neon-solid py-3 rounded-xl flex items-center justify-center gap-2 font-bold text-sm shadow-[0_0_15px_rgba(0,240,255,0.4)]">
+            <a href="/services" class="w-full btn-neon-solid py-3 rounded-xl flex items-center justify-center gap-2 font-bold text-sm shadow-[0_0_15px_rgba(0,240,255,0.4)]">
               <span>تصفح الآن</span>
               <i class="bi bi-arrow-left"></i>
             </a>
           </div>
         </div>
 
-        <!-- CARD 2 (Center Card): Group of Five Characters & Gamepad Icon -->
         <div class="glass-panel glass-panel-hover rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group border-cyan-400/50">
-          <div class="absolute -top-10 -right-10 w-32 h-32 bg-cyan-500/20 rounded-full blur-2xl group-hover:bg-cyan-500/30 transition"></div>
-          
           <div class="space-y-4 relative z-10">
             <div class="h-48 rounded-2xl overflow-hidden border border-cyan-500/40 relative">
               <img src="assets/cat_accounts.jpg" alt="حسابات ألعاب" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
@@ -246,17 +205,14 @@
           </div>
 
           <div class="pt-6 relative z-10">
-            <a href="#products" class="w-full btn-neon-solid py-3 rounded-xl flex items-center justify-center gap-2 font-bold text-sm shadow-[0_0_20px_rgba(0,240,255,0.5)]">
-              <span>تمفح الان</span>
+            <a href="/store" class="w-full btn-neon-solid py-3 rounded-xl flex items-center justify-center gap-2 font-bold text-sm shadow-[0_0_20px_rgba(0,240,255,0.5)]">
+              <span>تصفح الآن</span>
               <i class="bi bi-arrow-left"></i>
             </a>
           </div>
         </div>
 
-        <!-- CARD 3 (Right Card): Masked Character & Orange Triangle Logo -->
         <div class="glass-panel glass-panel-hover rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group">
-          <div class="absolute -bottom-10 -right-10 w-32 h-32 bg-orange-600/20 rounded-full blur-2xl group-hover:bg-orange-600/30 transition"></div>
-          
           <div class="space-y-4 relative z-10">
             <div class="h-48 rounded-2xl overflow-hidden border border-orange-500/30 relative bg-navy-950">
               <img src="assets/cat_fivem.svg" alt="حسابات FiveM" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
@@ -268,7 +224,7 @@
 
             <div class="space-y-2">
               <h3 class="text-2xl font-black text-white flex items-center gap-2">
-                <i class="bi bi-[#ff6b00] bi-shield-lock-fill text-orange-500"></i>
+                <i class="bi bi-shield-lock-fill text-orange-500"></i>
                 <span>حسابات FiveM</span>
               </h3>
               <p class="text-xs text-gray-400 leading-relaxed">
@@ -278,24 +234,18 @@
           </div>
 
           <div class="pt-6 relative z-10">
-            <a href="#products" class="w-full btn-neon-solid py-3 rounded-xl flex items-center justify-center gap-2 font-bold text-sm shadow-[0_0_15px_rgba(0,240,255,0.4)]">
-              <span>تمفح الان</span>
+            <a href="/store" class="w-full btn-neon-solid py-3 rounded-xl flex items-center justify-center gap-2 font-bold text-sm shadow-[0_0_15px_rgba(0,240,255,0.4)]">
+              <span>تصفح الآن</span>
               <i class="bi bi-arrow-left"></i>
             </a>
           </div>
         </div>
-
       </div>
-
     </div>
   </section>
 
-
-  <!-- BOTTOM SECTION: LATEST PRODUCTS ("أحدث المنتجات 🔥") -->
   <section id="products" class="py-16 bg-gradient-to-b from-[#050b14] via-[#0a1326] to-[#050b14] relative">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      
-      <!-- Section Header -->
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
         <div>
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-orange-950/60 border border-orange-500/40 text-orange-400 text-xs font-bold mb-2">
@@ -311,21 +261,15 @@
         </div>
       </div>
 
-      <!-- ROW OF 5 PRODUCT CARDS (Requested in User Prompt) -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
-        
-        <!-- PRODUCT 1: GTA 5 Account -->
         <div class="glass-panel glass-panel-hover rounded-2xl p-4 flex flex-col justify-between relative group">
           <div class="space-y-3">
-            <!-- Cover Art -->
             <div class="h-44 rounded-xl overflow-hidden border border-cyan-500/30 relative bg-navy-900">
               <img src="assets/gta5_cover.svg" alt="GTA 5 Account" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <span class="absolute top-2 right-2 bg-red-600 text-white text-[11px] font-black px-2 py-0.5 rounded-md">
                 الأكثر مبيعاً 🔥
               </span>
             </div>
-
-            <!-- Title & Distorted Specs -->
             <div>
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">GTAH ECCIDA COME V</span>
               <h3 class="font-black text-white text-base leading-snug">GTA 5 Argaent</h3>
@@ -333,7 +277,6 @@
             </div>
           </div>
 
-          <!-- Price & Buy Button -->
           <div class="pt-4 border-t border-cyan-500/20 mt-4 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs text-gray-400">السعر:</span>
@@ -346,18 +289,14 @@
           </div>
         </div>
 
-        <!-- PRODUCT 2: FiveM Account -->
         <div class="glass-panel glass-panel-hover rounded-2xl p-4 flex flex-col justify-between relative group">
           <div class="space-y-3">
-            <!-- Cover Art -->
             <div class="h-44 rounded-xl overflow-hidden border border-orange-500/30 relative bg-navy-900">
               <img src="assets/fivem_cover.svg" alt="FiveM Account" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <span class="absolute top-2 right-2 bg-orange-500 text-black text-[11px] font-black px-2 py-0.5 rounded-md">
                 FiveM Fliccount
               </span>
             </div>
-
-            <!-- Title -->
             <div>
               <span class="text-[10px] text-orange-400 uppercase font-bold tracking-wider">FiveM Roleplay</span>
               <h3 class="font-black text-white text-base leading-snug">FiveM حساب</h3>
@@ -365,7 +304,6 @@
             </div>
           </div>
 
-          <!-- Price & Buy Button -->
           <div class="pt-4 border-t border-cyan-500/20 mt-4 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs text-gray-400">السعر:</span>
@@ -378,18 +316,14 @@
           </div>
         </div>
 
-        <!-- PRODUCT 3: RDR2 Account -->
         <div class="glass-panel glass-panel-hover rounded-2xl p-4 flex flex-col justify-between relative group">
           <div class="space-y-3">
-            <!-- Cover Art -->
             <div class="h-44 rounded-xl overflow-hidden border border-red-500/30 relative bg-navy-900">
               <img src="assets/rdr2_cover.svg" alt="RDR2 Account" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <span class="absolute top-2 right-2 bg-amber-500 text-black text-[11px] font-black px-2 py-0.5 rounded-md">
                 مميز ⭐
               </span>
             </div>
-
-            <!-- Title -->
             <div>
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">ROCKSTAR GAMES</span>
               <h3 class="font-black text-white text-base leading-snug">RDR2 Account</h3>
@@ -397,7 +331,6 @@
             </div>
           </div>
 
-          <!-- Price & Buy Button -->
           <div class="pt-4 border-t border-cyan-500/20 mt-4 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs text-gray-400">السعر:</span>
@@ -410,18 +343,14 @@
           </div>
         </div>
 
-        <!-- PRODUCT 4: Fortnite Account -->
         <div class="glass-panel glass-panel-hover rounded-2xl p-4 flex flex-col justify-between relative group">
           <div class="space-y-3">
-            <!-- Cover Art -->
             <div class="h-44 rounded-xl overflow-hidden border border-purple-500/30 relative bg-navy-900">
               <img src="assets/fortnite_cover.svg" alt="Fortnite Account" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <span class="absolute top-2 right-2 bg-purple-600 text-white text-[11px] font-black px-2 py-0.5 rounded-md">
                 سكنات 👕
               </span>
             </div>
-
-            <!-- Title -->
             <div>
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">EPIC GAMES</span>
               <h3 class="font-black text-white text-base leading-snug">Fortnite Account</h3>
@@ -429,7 +358,6 @@
             </div>
           </div>
 
-          <!-- Price & Buy Button -->
           <div class="pt-4 border-t border-cyan-500/20 mt-4 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs text-gray-400">السعر:</span>
@@ -442,18 +370,14 @@
           </div>
         </div>
 
-        <!-- PRODUCT 5: Minecraft Account -->
         <div class="glass-panel glass-panel-hover rounded-2xl p-4 flex flex-col justify-between relative group">
           <div class="space-y-3">
-            <!-- Cover Art -->
             <div class="h-44 rounded-xl overflow-hidden border border-emerald-500/30 relative bg-navy-900">
               <img src="assets/minecraft_cover.svg" alt="Minecraft Account" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
               <span class="absolute top-2 right-2 bg-emerald-600 text-white text-[11px] font-black px-2 py-0.5 rounded-md">
                 Java & Bedrock
               </span>
             </div>
-
-            <!-- Title -->
             <div>
               <span class="text-[10px] text-gray-400 uppercase font-bold tracking-wider">MOJANG</span>
               <h3 class="font-black text-white text-base leading-snug">Minecraft Account</h3>
@@ -461,7 +385,6 @@
             </div>
           </div>
 
-          <!-- Price & Buy Button -->
           <div class="pt-4 border-t border-cyan-500/20 mt-4 space-y-3">
             <div class="flex items-center justify-between">
               <span class="text-xs text-gray-400">السعر:</span>
@@ -473,17 +396,12 @@
             </button>
           </div>
         </div>
-
       </div>
-
     </div>
   </section>
 
-
-  <!-- TRUST & SERVICES BAR -->
   <section id="services" class="py-12 bg-navy-950 border-y border-cyan-500/20">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
-      
       <div class="p-4 rounded-2xl bg-navy-900/40 border border-cyan-500/20 flex flex-col items-center gap-2">
         <div class="w-12 h-12 rounded-xl bg-cyan-950 border border-cyan-400/40 flex items-center justify-center text-cyan-400 text-2xl">
           ⚡
@@ -515,17 +433,12 @@
         <h4 class="font-black text-white">طرق دفع متنوّعة</h4>
         <p class="text-xs text-gray-400">فودافون كاش، InstaPay، كروت وسيرفرات بجميع العملات</p>
       </div>
-
     </div>
   </section>
 
-
-  <!-- FOOTER -->
   <footer id="contact" class="bg-[#030712] border-t border-cyan-500/20 text-gray-400 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-      
       <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-gray-800">
-        <!-- Logo -->
         <div class="flex items-center gap-3">
           <span class="text-3xl crown-pulse">👑</span>
           <div>
@@ -534,7 +447,6 @@
           </div>
         </div>
 
-        <!-- Social Icons -->
         <div class="flex items-center gap-4 text-2xl">
           <a href="#" class="w-10 h-10 rounded-xl bg-navy-900 border border-cyan-500/30 flex items-center justify-center text-cyan-400 hover:bg-cyan-500 hover:text-black transition">
             <i class="bi bi-discord"></i>
@@ -561,16 +473,11 @@
           <a href="#" class="hover:text-cyan-400">ضمان الاسترجاع</a>
         </div>
       </div>
-
     </div>
   </footer>
 
-
-  <!-- SHOPPING CART DRAWER (Interactive Side-Panel) -->
   <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden transition"></div>
   <aside id="cart-drawer" class="fixed top-0 right-0 w-full sm:w-96 h-full bg-[#050b14] border-l border-cyan-500/30 z-50 transform translate-x-full transition duration-300 flex flex-col justify-between shadow-2xl">
-    
-    <!-- Drawer Header -->
     <div class="p-5 border-b border-cyan-500/20 flex items-center justify-between bg-navy-900/60">
       <div class="flex items-center gap-2">
         <i class="bi bi-cart3 text-cyan-400 text-xl"></i>
@@ -581,12 +488,8 @@
       </button>
     </div>
 
-    <!-- Drawer Items List -->
-    <div id="cart-items-container" class="p-5 flex-1 overflow-y-auto space-y-3">
-      <!-- Dynamic Javascript Content -->
-    </div>
+    <div id="cart-items-container" class="p-5 flex-1 overflow-y-auto space-y-3"></div>
 
-    <!-- Drawer Footer / Total & Checkout -->
     <div class="p-5 border-t border-cyan-500/20 bg-navy-900/80 space-y-4">
       <div class="flex items-center justify-between text-base font-bold text-white">
         <span>الإجمالي:</span>
@@ -597,14 +500,10 @@
         <i class="bi bi-arrow-left"></i>
       </button>
     </div>
-
   </aside>
 
-
-  <!-- SEARCH MODAL OVERLAY -->
   <div id="search-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-start justify-center pt-20 px-4">
     <div class="bg-navy-900 border border-cyan-500/40 rounded-3xl w-full max-w-xl p-6 space-y-4 shadow-[0_0_50px_rgba(0,240,255,0.3)]">
-      
       <div class="flex items-center justify-between pb-3 border-b border-cyan-500/20">
         <h3 class="font-black text-lg text-white flex items-center gap-2">
           <i class="bi bi-search text-cyan-400"></i>
@@ -614,47 +513,12 @@
       </div>
 
       <input id="search-input" type="text" placeholder="اكتب اسم الحساب أو الخدمة (مثلاً GTA, FiveM, RDR2)..." class="w-full bg-navy-950 border border-cyan-500/40 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-400">
-
       <div id="search-results" class="max-h-60 overflow-y-auto space-y-2">
         <p class="text-gray-400 text-sm text-center py-4">اكتب اسم اللعبة أو الخدمة للبحث...</p>
       </div>
-
     </div>
   </div>
 
-
-  <!-- PRODUCT DETAILS QUICK-VIEW MODAL -->
-  <div id="product-modal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-    <div class="bg-navy-900 border border-cyan-500/40 rounded-3xl w-full max-w-lg p-6 space-y-6 relative shadow-2xl">
-      
-      <button onclick="closeProductModal()" class="absolute top-4 left-4 w-8 h-8 rounded-full bg-navy-950 text-gray-400 hover:text-white flex items-center justify-center">
-        ✕
-      </button>
-
-      <div class="flex items-center gap-4">
-        <img id="modal-img" src="" class="w-24 h-24 rounded-2xl object-cover border border-cyan-500/40">
-        <div>
-          <span id="modal-badge" class="bg-cyan-950 border border-cyan-400 text-cyan-300 text-xs font-bold px-2.5 py-1 rounded-md"></span>
-          <h3 id="modal-title" class="font-black text-2xl text-white mt-1"></h3>
-          <p id="modal-subtitle" class="text-xs text-gray-400"></p>
-          <div id="modal-price" class="text-xl font-black text-yellow-400 mt-2"></div>
-        </div>
-      </div>
-
-      <div class="space-y-2">
-        <h4 class="font-bold text-sm text-cyan-400">المميزات والضمان:</h4>
-        <ul id="modal-features" class="text-xs text-gray-300 space-y-1.5 bg-navy-950 p-4 rounded-xl border border-cyan-500/20"></ul>
-      </div>
-
-      <button id="modal-buy-btn" class="w-full btn-neon-solid py-3.5 rounded-xl font-bold flex items-center justify-center gap-2">
-        <span>إضافة إلى السلة الآن</span>
-        <i class="bi bi-cart-plus"></i>
-      </button>
-
-    </div>
-  </div>
-
-  <!-- JavaScript App Logic -->
   <script src="app.js"></script>
 </body>
 </html>

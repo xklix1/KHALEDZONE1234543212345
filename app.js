@@ -1,22 +1,10 @@
-// KHALED ZONE - Multi-page App Logic & Cart State Management
+(function () {
+  'use strict';
 
-document.addEventListener('DOMContentLoaded', () => {
-  // State from localStorage
-  let cart = JSON.parse(localStorage.getItem('khaled_zone_cart') || '[]');
+  const STORAGE_KEY = 'khaled_zone_cart';
+  const WHATSAPP_PHONE = '201000000000';
 
-  // DOM Elements
-  const cartBadge = document.getElementById('cart-badge');
-  const cartDrawer = document.getElementById('cart-drawer');
-  const cartOverlay = document.getElementById('cart-overlay');
-  const cartItemsContainer = document.getElementById('cart-items-container');
-  const cartTotalEl = document.getElementById('cart-total');
-  const searchModal = document.getElementById('search-modal');
-  const searchInput = document.getElementById('search-input');
-  const searchResults = document.getElementById('search-results');
-  const productModal = document.getElementById('product-modal');
-
-  // Master Products Data
-  window.products = [
+  const CatalogRepository = [
     {
       id: 'gta5-account',
       title: 'GTA 5 Account',
@@ -79,107 +67,118 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   ];
 
-  // Global Functions Attached to Window for HTML Handlers
-  window.addToCart = function (productId) {
-    const item = window.products.find(p => p.id === productId);
-    if (!item) return;
+  window.products = CatalogRepository;
 
-    const existingIndex = cart.findIndex(ci => ci.id === productId);
-    if (existingIndex > -1) {
-      cart[existingIndex].quantity += 1;
-    } else {
-      cart.push({ ...item, quantity: 1 });
+  class CartManager {
+    constructor() {
+      this.items = this.loadState();
     }
 
-    saveCart();
-    updateCartUI();
-    showToast(`تمت إضافة "${item.title}" إلى السلة بنجاح! 🛒`);
-  };
-
-  window.removeFromCart = function (productId) {
-    cart = cart.filter(item => item.id !== productId);
-    saveCart();
-    updateCartUI();
-    showToast('تم إزالة المنتج من السلة');
-  };
-
-  window.toggleCart = function () {
-    if (!cartDrawer || !cartOverlay) return;
-    if (cartDrawer.classList.contains('translate-x-full')) {
-      cartDrawer.classList.remove('translate-x-full');
-      cartOverlay.classList.remove('hidden');
-    } else {
-      cartDrawer.classList.add('translate-x-full');
-      cartOverlay.classList.add('hidden');
+    loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        return raw ? JSON.parse(raw) : [];
+      } catch (err) {
+        console.error('Cart state load exception:', err);
+        return [];
+      }
     }
-  };
 
-  window.toggleSearchModal = function () {
-    if (!searchModal) return;
-    if (searchModal.classList.contains('hidden')) {
-      searchModal.classList.remove('hidden');
-      if (searchInput) searchInput.focus();
-    } else {
-      searchModal.classList.add('hidden');
+    saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(this.items));
+      } catch (err) {
+        console.error('Cart state save exception:', err);
+      }
     }
-  };
 
-  window.openProductModal = function (productId) {
-    window.location.href = `/product?id=${productId}`;
-  };
+    addItem(productId) {
+      const product = CatalogRepository.find((p) => p.id === productId);
+      if (!product) return null;
 
-  window.checkout = function () {
-    if (cart.length === 0) {
-      showToast('السلة فارغة حالياً!');
-      return;
+      const existing = this.items.find((i) => i.id === productId);
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        this.items.push({ ...product, quantity: 1 });
+      }
+
+      this.saveState();
+      return product;
     }
-    const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
-    const orderDetails = cart.map(i => `• ${i.title} (${i.quantity}x) - ${i.price * i.quantity} جنيه`).join('%0A');
-    const waUrl = `https://wa.me/201000000000?text=مرحباً%20KLIX%20!%20أريد%20إتمام%20طلب%20من%20KHALED%20ZONE:%0A${orderDetails}%0A%0Aالإجمالي:%20${total}%20جنيه`;
-    
-    alert(`🎉 شكراً لطلبك من KHALED ZONE!\n\nإجمالي الطلب: ${total} جنيه\nسيتم توجيهك الآن للواتساب لتأكيد الاستلام الفوري.`);
-    cart = [];
-    saveCart();
-    updateCartUI();
-    window.open(waUrl, '_blank');
-  };
 
-  function saveCart() {
-    localStorage.setItem('khaled_zone_cart', JSON.stringify(cart));
+    removeItem(productId) {
+      this.items = this.items.filter((i) => i.id !== productId);
+      this.saveState();
+    }
+
+    clear() {
+      this.items = [];
+      this.saveState();
+    }
+
+    getTotalCount() {
+      return this.items.reduce((sum, item) => sum + item.quantity, 0);
+    }
+
+    getTotalAmount() {
+      return this.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    }
   }
 
-  function updateCartUI() {
-    if (!cartBadge) return;
-    const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
-    cartBadge.textContent = totalCount;
+  const cartService = new CartManager();
 
-    if (totalCount > 0) {
-      cartBadge.classList.add('bg-orange-500', 'badge-pulse');
-      cartBadge.classList.remove('bg-gray-700');
-    } else {
-      cartBadge.classList.remove('bg-orange-500', 'badge-pulse');
-      cartBadge.classList.add('bg-gray-700');
+  function notifyUser(message) {
+    const toast = document.createElement('div');
+    toast.className =
+      'fixed bottom-6 left-6 z-50 bg-cyan-900/90 border border-cyan-400 text-white px-5 py-3 rounded-xl shadow-2xl backdrop-blur-md transition-all transform translate-y-4 opacity-0 flex items-center gap-3 font-semibold text-sm';
+    toast.innerHTML = `<span>⚡</span><span>${message}</span>`;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.classList.remove('translate-y-4', 'opacity-0');
+    });
+
+    setTimeout(() => {
+      toast.classList.add('translate-y-4', 'opacity-0');
+      setTimeout(() => toast.remove(), 300);
+    }, 3000);
+  }
+
+  function syncCartUI() {
+    const badge = document.getElementById('cart-badge');
+    const container = document.getElementById('cart-items-container');
+    const totalEl = document.getElementById('cart-total');
+
+    if (badge) {
+      const count = cartService.getTotalCount();
+      badge.textContent = count;
+      if (count > 0) {
+        badge.classList.add('bg-orange-500', 'badge-pulse');
+        badge.classList.remove('bg-gray-700');
+      } else {
+        badge.classList.remove('bg-orange-500', 'badge-pulse');
+        badge.classList.add('bg-gray-700');
+      }
     }
 
-    if (!cartItemsContainer || !cartTotalEl) return;
+    if (!container || !totalEl) return;
 
-    if (cart.length === 0) {
-      cartItemsContainer.innerHTML = `
+    if (cartService.items.length === 0) {
+      container.innerHTML = `
         <div class="text-center py-12 text-gray-400">
           <div class="text-5xl mb-3">🛒</div>
           <p class="text-lg">السلة فارغة حالياً</p>
           <p class="text-sm text-gray-500 mt-1">تصفح المنتجات وأضف ما يعجبك!</p>
         </div>
       `;
-      cartTotalEl.textContent = '0 جنيه';
+      totalEl.textContent = '0 جنيه';
       return;
     }
 
-    let html = '';
-    let total = 0;
-    cart.forEach(item => {
-      total += item.price * item.quantity;
-      html += `
+    container.innerHTML = cartService.items
+      .map(
+        (item) => `
         <div class="flex items-center justify-between p-3 bg-navy-900/60 rounded-xl border border-cyan-500/20">
           <div class="flex items-center gap-3">
             <img src="${item.image}" alt="${item.title}" class="w-12 h-12 object-cover rounded-lg border border-cyan-400/30">
@@ -192,57 +191,107 @@ document.addEventListener('DOMContentLoaded', () => {
             ✕
           </button>
         </div>
-      `;
-    });
+      `
+      )
+      .join('');
 
-    cartItemsContainer.innerHTML = html;
-    cartTotalEl.textContent = `${total} جنيه`;
+    totalEl.textContent = `${cartService.getTotalAmount()} جنيه`;
   }
 
-  function showToast(message) {
-    const toast = document.createElement('div');
-    toast.className = 'fixed bottom-6 left-6 z-50 bg-cyan-900/90 border border-cyan-400 text-white px-5 py-3 rounded-xl shadow-2xl backdrop-blur-md transition-all transform translate-y-4 opacity-0 flex items-center gap-3 font-semibold text-sm';
-    toast.innerHTML = `<span>⚡</span><span>${message}</span>`;
-    document.body.appendChild(toast);
+  window.addToCart = function (productId) {
+    const product = cartService.addItem(productId);
+    if (product) {
+      syncCartUI();
+      notifyUser(`تمت إضافة "${product.title}" إلى السلة بنجاح! 🛒`);
+    }
+  };
 
-    setTimeout(() => {
-      toast.classList.remove('translate-y-4', 'opacity-0');
-    }, 10);
+  window.removeFromCart = function (productId) {
+    cartService.removeItem(productId);
+    syncCartUI();
+    notifyUser('تم إزالة المنتج من السلة');
+  };
 
-    setTimeout(() => {
-      toast.classList.add('translate-y-4', 'opacity-0');
-      setTimeout(() => toast.remove(), 300);
-    }, 3000);
-  }
+  window.toggleCart = function () {
+    const drawer = document.getElementById('cart-drawer');
+    const overlay = document.getElementById('cart-overlay');
+    if (!drawer || !overlay) return;
 
-  // Live Search Handler
-  if (searchInput && searchResults) {
-    searchInput.addEventListener('input', (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      if (!query) {
-        searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">اكتب اسم اللعبة أو الخدمة للبحث...</p>';
-        return;
-      }
-      const filtered = window.products.filter(p => p.title.toLowerCase().includes(query) || p.subTitle.toLowerCase().includes(query));
-      if (filtered.length === 0) {
-        searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لم يتم العثور على نتائج</p>';
-      } else {
-        searchResults.innerHTML = filtered.map(p => `
-          <a href="/product?id=${p.id}" class="flex items-center justify-between p-3 hover:bg-cyan-950/60 rounded-xl cursor-pointer border border-transparent hover:border-cyan-500/30 transition">
-            <div class="flex items-center gap-3">
-              <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
-              <div>
-                <div class="font-bold text-white text-sm">${p.title}</div>
-                <div class="text-xs text-gray-400">${p.subTitle}</div>
+    const isHidden = drawer.classList.contains('translate-x-full');
+    drawer.classList.toggle('translate-x-full', !isHidden);
+    overlay.classList.toggle('hidden', !isHidden);
+  };
+
+  window.toggleSearchModal = function () {
+    const modal = document.getElementById('search-modal');
+    const input = document.getElementById('search-input');
+    if (!modal) return;
+
+    const isHidden = modal.classList.contains('hidden');
+    modal.classList.toggle('hidden', !isHidden);
+    if (isHidden && input) input.focus();
+  };
+
+  window.openProductModal = function (productId) {
+    window.location.href = `/product?id=${productId}`;
+  };
+
+  window.checkout = function () {
+    if (cartService.items.length === 0) {
+      notifyUser('السلة فارغة حالياً!');
+      return;
+    }
+
+    const total = cartService.getTotalAmount();
+    const summary = cartService.items.map((i) => `• ${i.title} (${i.quantity}x) - ${i.price * i.quantity} جنيه`).join('%0A');
+    const message = `مرحباً KLIX ! أريد إتمام طلب من KHALED ZONE:%0A${summary}%0A%0Aالإجمالي: ${total} جنيه`;
+    const targetUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${message}`;
+
+    alert(`🎉 شكراً لطلبك من KHALED ZONE!\n\nإجمالي الطلب: ${total} جنيه\nسيتم توجيهك الآن للواتساب لتأكيد الاستلام الفوري.`);
+    cartService.clear();
+    syncCartUI();
+    window.open(targetUrl, '_blank');
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    syncCartUI();
+
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+
+    if (searchInput && searchResults) {
+      searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase().trim();
+        if (!query) {
+          searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">اكتب اسم اللعبة أو الخدمة للبحث...</p>';
+          return;
+        }
+
+        const matches = CatalogRepository.filter(
+          (p) => p.title.toLowerCase().includes(query) || p.subTitle.toLowerCase().includes(query)
+        );
+
+        if (matches.length === 0) {
+          searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لم يتم العثور على نتائج</p>';
+        } else {
+          searchResults.innerHTML = matches
+            .map(
+              (p) => `
+            <a href="/product?id=${p.id}" class="flex items-center justify-between p-3 hover:bg-cyan-950/60 rounded-xl cursor-pointer border border-transparent hover:border-cyan-500/30 transition">
+              <div class="flex items-center gap-3">
+                <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
+                <div>
+                  <div class="font-bold text-white text-sm">${p.title}</div>
+                  <div class="text-xs text-gray-400">${p.subTitle}</div>
+                </div>
               </div>
-            </div>
-            <div class="text-cyan-400 font-bold text-sm">${p.price} جنيه</div>
-          </a>
-        `).join('');
-      }
-    });
-  }
-
-  // Initialize UI
-  updateCartUI();
-});
+              <div class="text-cyan-400 font-bold text-sm">${p.price} جنيه</div>
+            </a>
+          `
+            )
+            .join('');
+        }
+      });
+    }
+  });
+})();
