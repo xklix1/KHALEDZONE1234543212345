@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>العروض 🔥 - KHALED ZONE | خصومات وعروض خاصة</title>
-  
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
     tailwind.config = {
@@ -12,205 +11,187 @@
       theme: {
         extend: {
           colors: {
-            navy: { 950: '#030712', 900: '#050b14', 800: '#0a1326', 700: '#111d38', 600: '#1a2b52' },
-            neon: { blue: '#00f0ff', orange: '#ff6b00', cyan: '#00d2ff' },
-            gold: { crown: '#ffd700' }
+            brand: { 500: '#0ea5e9', 600: '#0284c7', 950: '#030712' }
           }
         }
       }
     }
   </script>
-  
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="bg-[#050b14] text-white min-h-screen">
+<body class="bg-slate-950 text-slate-100 min-h-screen">
 
-  <!-- NAVIGATION BAR -->
-  <header class="sticky top-0 z-40 bg-[#050b14]/80 backdrop-blur-xl border-b border-cyan-500/20 shadow-[0_4px_20px_rgba(0,0,0,0.8)]">
+  <header class="sticky top-0 z-40 bg-slate-950/80 backdrop-blur-xl border-b border-cyan-500/20 shadow-lg shadow-black/50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
       
       <div class="flex items-center gap-3">
-        <a href="index.html" class="flex items-center gap-2 group">
-          <div class="relative flex items-center justify-center w-12 h-12 rounded-xl bg-gradient-to-tr from-blue-900 to-cyan-500 p-0.5 shadow-[0_0_15px_rgba(0,240,255,0.5)]">
-            <div class="w-full h-full bg-[#050b14] rounded-[10px] flex items-center justify-center relative">
-              <span class="text-2xl crown-pulse">👑</span>
+        <a href="/" class="flex items-center gap-2 group">
+          <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shadow-md shadow-cyan-500/30">
+            <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+              <span class="text-2xl">👑</span>
             </div>
           </div>
           <div class="flex flex-col">
-            <div class="flex items-center gap-1.5">
-              <span class="font-black text-xl tracking-wider text-white group-hover:text-cyan-400 transition">KHALED</span>
-              <span class="font-black text-xl tracking-wider text-neon-blue">ZONE</span>
+            <div class="flex items-center gap-1.5 font-black text-xl tracking-wider">
+              <span class="text-white group-hover:text-cyan-400 transition-colors">KHALED</span>
+              <span class="text-cyan-400">ZONE</span>
             </div>
-            <span class="text-[10px] text-yellow-400 font-semibold tracking-widest flex items-center gap-1">
-              <span>BLUE ZONE</span>
-              <span class="text-xs">⚡</span>
-            </span>
+            <span class="text-[10px] text-amber-400 font-bold tracking-widest">BLUE ZONE DIGITAL</span>
           </div>
         </a>
       </div>
 
-      <nav class="hidden md:flex items-center gap-2 lg:gap-4 font-bold text-sm">
-        <a href="/" class="px-4 py-2 text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/40 rounded-xl transition">الرئيسية</a>
-        <a href="/store" class="px-4 py-2 text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/40 rounded-xl transition">المتجر</a>
-        <a href="/offers" class="btn-glowing-outline px-5 py-2 rounded-xl transition">العروض 🔥</a>
-        <a href="/services" class="px-4 py-2 text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/40 rounded-xl transition">خدمات</a>
-        <a href="/about" class="px-4 py-2 text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/40 rounded-xl transition">من نحن</a>
-        <a href="/contact" class="px-4 py-2 text-gray-300 hover:text-cyan-400 hover:bg-cyan-950/40 rounded-xl transition">تواصل معنا</a>
+      <nav class="hidden md:flex items-center gap-2 lg:gap-3 font-bold text-sm">
+        <a href="/" class="px-4 py-2.5 text-slate-300 hover:text-cyan-400 hover:bg-slate-900 rounded-xl transition-all">الرئيسية</a>
+        <a href="/store" class="px-4 py-2.5 text-slate-300 hover:text-cyan-400 hover:bg-slate-900 rounded-xl transition-all">المتجر</a>
+        <a href="/offers" class="px-5 py-2.5 rounded-xl border-2 border-cyan-400 text-cyan-400 bg-cyan-950/30 shadow-md shadow-cyan-500/20 transition-all">العروض 🔥</a>
+        <a href="/services" class="px-4 py-2.5 text-slate-300 hover:text-cyan-400 hover:bg-slate-900 rounded-xl transition-all">خدمات</a>
+        <a href="/about" class="px-4 py-2.5 text-slate-300 hover:text-cyan-400 hover:bg-slate-900 rounded-xl transition-all">من نحن</a>
+        <a href="/contact" class="px-4 py-2.5 text-slate-300 hover:text-cyan-400 hover:bg-slate-900 rounded-xl transition-all">تواصل معنا</a>
       </nav>
 
       <div class="flex items-center gap-3">
-        <button onclick="toggleSearchModal()" class="w-10 h-10 rounded-xl bg-navy-800/80 border border-cyan-500/30 flex items-center justify-center text-cyan-400 hover:bg-cyan-500 hover:text-black transition">
-          <i class="bi bi-search text-lg"></i>
+        <button onclick="toggleSearchModal()" class="w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 flex items-center justify-center text-cyan-400 hover:bg-cyan-500 hover:text-black transition-all">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
         </button>
 
-        <button onclick="toggleCart()" class="relative w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-900 to-blue-600 p-0.5 shadow-[0_0_15px_rgba(0,240,255,0.4)] hover:scale-105 transition">
-          <div class="w-full h-full bg-[#050b14] rounded-[10px] flex items-center justify-center text-cyan-400">
-            <i class="bi bi-cart3 text-xl"></i>
+        <button onclick="toggleCart()" class="relative w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shadow-lg shadow-cyan-500/20 hover:scale-105 transition-all">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center text-cyan-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 100 4 2 2 0 000-4z"/></svg>
           </div>
-          <span id="cart-badge" class="absolute -top-1.5 -left-1.5 bg-gray-700 text-white font-black text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-[#050b14]">0</span>
+          <span id="cart-badge" class="absolute -top-1.5 -left-1.5 bg-slate-800 text-white font-black text-xs w-6 h-6 rounded-full flex items-center justify-center border-2 border-slate-950">0</span>
         </button>
 
-        <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden w-10 h-10 rounded-xl bg-navy-800 border border-cyan-500/30 text-white flex items-center justify-center">
-          <i class="bi bi-list text-2xl"></i>
+        <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" class="md:hidden w-10 h-10 rounded-xl bg-slate-900 border border-slate-800 text-white flex items-center justify-center">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
         </button>
       </div>
 
     </div>
 
-    <div id="mobile-menu" class="hidden md:hidden bg-[#050b14]/95 border-b border-cyan-500/30 px-4 py-4 space-y-2">
-      <a href="index.html" class="block py-2 text-gray-300">الرئيسية</a>
-      <a href="store.html" class="block py-2 text-gray-300">المتجر</a>
-      <a href="offers.html" class="block py-2 text-cyan-400 font-bold">العروض 🔥</a>
-      <a href="services.html" class="block py-2 text-gray-300">خدمات</a>
-      <a href="about.html" class="block py-2 text-gray-300">من نحن</a>
-      <a href="contact.html" class="block py-2 text-gray-300">تواصل معنا</a>
+    <div id="mobile-menu" class="hidden md:hidden bg-slate-950/95 border-b border-slate-800 px-4 py-4 space-y-2">
+      <a href="/" class="block py-2 text-slate-300">الرئيسية</a>
+      <a href="/store" class="block py-2 text-slate-300">المتجر</a>
+      <a href="/offers" class="block py-2 text-cyan-400 font-bold">العروض 🔥</a>
+      <a href="/services" class="block py-2 text-slate-300">خدمات</a>
+      <a href="/about" class="block py-2 text-slate-300">من نحن</a>
+      <a href="/contact" class="block py-2 text-slate-300">تواصل معنا</a>
     </div>
   </header>
 
-  <!-- OFFERS HERO HEADER -->
-  <section class="py-12 bg-gradient-to-b from-[#1a0826] to-[#050b14] border-b border-orange-500/30">
+  <section class="py-12 bg-gradient-to-b from-slate-900 to-slate-950 border-b border-slate-800">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-orange-950/80 border border-orange-500/50 text-orange-400 text-xs font-bold animate-pulse">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-900 border border-orange-500/40 text-orange-400 text-xs font-bold animate-pulse">
         <span>🔥 عروض وحصريات الموسم</span>
       </div>
       <h1 class="text-4xl sm:text-5xl font-black text-white">اقوى العروض والخصومات <span class="text-orange-500">💥</span></h1>
-      <p class="text-gray-400 max-w-xl mx-auto text-sm">وفر حتى 40% على أفضل حسابات GTA 5 و FiveM و RDR2 لفترة محدودة جداً!</p>
+      <p class="text-slate-400 max-w-xl mx-auto text-sm">وفر حتى 40% على أفضل حسابات GTA 5 و FiveM و RDR2 لفترة محدودة جداً!</p>
     </div>
   </section>
 
-  <!-- OFFERS LIST -->
   <section class="py-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-    
-    <!-- Big Banner Offer -->
-    <div class="glass-panel rounded-3xl p-8 border-2 border-orange-500/40 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
+    <div class="bg-slate-900/60 backdrop-blur-xl rounded-3xl p-8 border border-slate-800 relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-8">
       <div class="space-y-4 max-w-lg z-10">
-        <span class="bg-red-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">عرض فلاش الخارق 🔥</span>
+        <span class="bg-rose-600 text-white font-black text-xs px-3 py-1 rounded-full uppercase tracking-wider">عرض فلاش الخارق 🔥</span>
         <h2 class="text-3xl font-black text-white">باقة GTA V Premium + FiveM VIP</h2>
-        <p class="text-sm text-gray-300 leading-relaxed">احصل على حساب GTA 5 كاملاً ومفعلاً + حساب FiveM مجهز للرول بلاي بخصم حصري ومميزات ذهبية تسلم فورياً.</p>
+        <p class="text-sm text-slate-300 leading-relaxed">احصل على حساب GTA 5 كاملاً ومفعلاً + حساب FiveM مجهز للرول بلاي بخصم حصري ومميزات ذهبية تسلم فورياً.</p>
         <div class="flex items-center gap-4 pt-2">
-          <span class="text-3xl font-black text-yellow-400">180 جنيه</span>
-          <span class="text-lg text-gray-500 line-through">260 جنيه</span>
+          <span class="text-3xl font-black text-amber-400">180 جنيه</span>
+          <span class="text-lg text-slate-500 line-through">260 جنيه</span>
           <span class="bg-emerald-950 text-emerald-400 border border-emerald-500 text-xs font-bold px-2.5 py-1 rounded-lg">وفر 80 جنيه!</span>
         </div>
-        <button onclick="addToCart('gta5-account')" class="btn-orange-solid px-8 py-3 rounded-xl font-bold text-sm flex items-center gap-2">
+        <button onclick="addToCart('gta5-account')" class="px-8 py-3 rounded-xl bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-white font-bold text-sm shadow-lg shadow-orange-500/20 flex items-center gap-2 transition-all">
           <span>شراء العرض الآن</span>
-          <i class="bi bi-lightning-fill"></i>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
         </button>
       </div>
-      <div class="w-full md:w-80 h-52 rounded-2xl overflow-hidden border border-orange-500/40">
+      <div class="w-full md:w-80 h-52 rounded-2xl overflow-hidden border border-slate-800">
         <img src="assets/gta5_cover.svg" class="w-full h-full object-cover">
       </div>
     </div>
 
-    <!-- Grid of Discounted Products -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      
-      <div class="glass-panel glass-panel-hover rounded-2xl p-5 space-y-4">
+      <div class="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-5 border border-slate-800 space-y-4">
         <div class="flex items-center justify-between">
           <span class="bg-purple-950 border border-purple-500 text-purple-300 text-xs font-bold px-2.5 py-1 rounded-md">خصم 25%</span>
-          <span class="text-xs text-gray-400">ينتهي قريباً ⏳</span>
+          <span class="text-xs text-slate-400">ينتهي قريباً ⏳</span>
         </div>
         <h3 class="font-black text-xl text-white">حساب Fortnite نادر</h3>
-        <p class="text-xs text-gray-400">سكنات حصرية مع فأس نادرة وبيانات كاملة الملكية.</p>
+        <p class="text-xs text-slate-400">سكنات حصرية مع فأس نادرة وبيانات كاملة الملكية.</p>
         <div class="flex items-center justify-between pt-2">
           <div>
-            <span class="text-xl font-black text-yellow-400">90 جنيه</span>
-            <span class="text-xs text-gray-500 line-through ml-2">120 جنيه</span>
+            <span class="text-xl font-black text-amber-400">90 جنيه</span>
+            <span class="text-xs text-slate-500 line-through ml-2">120 جنيه</span>
           </div>
-          <button onclick="addToCart('fortnite-account')" class="btn-neon-solid px-5 py-2 rounded-xl text-xs font-bold">شراء العرض</button>
+          <button onclick="addToCart('fortnite-account')" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20">شراء العرض</button>
         </div>
       </div>
 
-      <div class="glass-panel glass-panel-hover rounded-2xl p-5 space-y-4">
+      <div class="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-5 border border-slate-800 space-y-4">
         <div class="flex items-center justify-between">
           <span class="bg-emerald-950 border border-emerald-500 text-emerald-300 text-xs font-bold px-2.5 py-1 rounded-md">خصم 30%</span>
-          <span class="text-xs text-gray-400">ينتهي قريباً ⏳</span>
+          <span class="text-xs text-slate-400">ينتهي قريباً ⏳</span>
         </div>
         <h3 class="font-black text-xl text-white">حساب Minecraft Original</h3>
-        <p class="text-xs text-gray-400">إشراك Java & Bedrock ودخول كافة السيرفرات العالمية.</p>
+        <p class="text-xs text-slate-400">إشراك Java & Bedrock ودخول كافة السيرفرات العالمية.</p>
         <div class="flex items-center justify-between pt-2">
           <div>
-            <span class="text-xl font-black text-yellow-400">70 جنيه</span>
-            <span class="text-xs text-gray-500 line-through ml-2">100 جنيه</span>
+            <span class="text-xl font-black text-amber-400">70 جنيه</span>
+            <span class="text-xs text-slate-500 line-through ml-2">100 جنيه</span>
           </div>
-          <button onclick="addToCart('minecraft-account')" class="btn-neon-solid px-5 py-2 rounded-xl text-xs font-bold">شراء العرض</button>
+          <button onclick="addToCart('minecraft-account')" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20">شراء العرض</button>
         </div>
       </div>
 
-      <div class="glass-panel glass-panel-hover rounded-2xl p-5 space-y-4">
+      <div class="bg-slate-900/60 backdrop-blur-xl rounded-2xl p-5 border border-slate-800 space-y-4">
         <div class="flex items-center justify-between">
-          <span class="bg-red-950 border border-red-500 text-red-300 text-xs font-bold px-2.5 py-1 rounded-md">خصم 25%</span>
-          <span class="text-xs text-gray-400">ينتهي قريباً ⏳</span>
+          <span class="bg-rose-950 border border-rose-500 text-rose-300 text-xs font-bold px-2.5 py-1 rounded-md">خصم 25%</span>
+          <span class="text-xs text-slate-400">ينتهي قريباً ⏳</span>
         </div>
         <h3 class="font-black text-xl text-white">حساب RDR2 Special Edition</h3>
-        <p class="text-xs text-gray-400">Red Dead Redemption 2 كاملة مع بيانات الأمان والتسليم الفوري.</p>
+        <p class="text-xs text-slate-400">Red Dead Redemption 2 كاملة مع بيانات الأمان والتسليم الفوري.</p>
         <div class="flex items-center justify-between pt-2">
           <div>
-            <span class="text-xl font-black text-yellow-400">150 جنيه</span>
-            <span class="text-xs text-gray-500 line-through ml-2">200 جنيه</span>
+            <span class="text-xl font-black text-amber-400">150 جنيه</span>
+            <span class="text-xs text-slate-500 line-through ml-2">200 جنيه</span>
           </div>
-          <button onclick="addToCart('rdr2-account')" class="btn-neon-solid px-5 py-2 rounded-xl text-xs font-bold">شراء العرض</button>
+          <button onclick="addToCart('rdr2-account')" class="px-5 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-md shadow-cyan-500/20">شراء العرض</button>
         </div>
       </div>
-
     </div>
-
   </section>
 
-  <!-- FOOTER -->
-  <footer class="bg-[#030712] border-t border-cyan-500/20 text-gray-400 py-12">
+  <footer class="bg-slate-950 border-t border-slate-800 text-slate-400 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-gray-800">
+      <div class="flex flex-col md:flex-row items-center justify-between gap-6 pb-8 border-b border-slate-800">
         <div class="flex items-center gap-3">
-          <span class="text-3xl crown-pulse">👑</span>
+          <span class="text-3xl">👑</span>
           <div>
-            <span class="font-black text-2xl text-white">KHALED <span class="text-neon-blue">ZONE</span></span>
-            <p class="text-xs text-yellow-400">BLUE ZONE DIGITAL MARKETPLACE</p>
+            <span class="font-black text-2xl text-white">KHALED <span class="text-cyan-400">ZONE</span></span>
+            <p class="text-xs text-amber-400">BLUE ZONE DIGITAL MARKETPLACE</p>
           </div>
         </div>
       </div>
 
-      <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-gray-500">
-        <p>© 2026 KHALED ZONE - جميع الحقوق محفوظة. تم التطوير بواسطة <span class="text-neon-blue font-extrabold tracking-wider">KLIX</span></p>
+      <div class="flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+        <p>© 2026 KHALED ZONE - جميع الحقوق محفوظة. تم التطوير بواسطة <span class="text-cyan-400 font-black tracking-wider">KLIX</span></p>
       </div>
     </div>
   </footer>
 
   <div id="cart-overlay" onclick="toggleCart()" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden"></div>
-  <aside id="cart-drawer" class="fixed top-0 right-0 w-full sm:w-96 h-full bg-[#050b14] border-l border-cyan-500/30 z-50 transform translate-x-full transition duration-300 flex flex-col justify-between">
-    <div class="p-5 border-b border-cyan-500/20 flex items-center justify-between bg-navy-900/60">
+  <aside id="cart-drawer" class="fixed top-0 right-0 w-full sm:w-96 h-full bg-slate-950 border-l border-slate-800 z-50 transform translate-x-full transition-transform duration-300 flex flex-col justify-between shadow-2xl">
+    <div class="p-5 border-b border-slate-800 flex items-center justify-between bg-slate-900/60">
       <h3 class="font-black text-lg text-white">سلة المشتريات</h3>
-      <button onclick="toggleCart()" class="w-8 h-8 rounded-lg bg-navy-800 text-gray-400 hover:text-white flex items-center justify-center">✕</button>
+      <button onclick="toggleCart()" class="w-8 h-8 rounded-lg bg-slate-900 text-slate-400 hover:text-white flex items-center justify-center">✕</button>
     </div>
     <div id="cart-items-container" class="p-5 flex-1 overflow-y-auto space-y-3"></div>
-    <div class="p-5 border-t border-cyan-500/20 bg-navy-900/80 space-y-4">
+    <div class="p-5 border-t border-slate-800 bg-slate-900/80 space-y-4">
       <div class="flex items-center justify-between font-bold text-white">
         <span>الإجمالي:</span>
-        <span id="cart-total" class="text-xl text-yellow-400 font-black">0 جنيه</span>
+        <span id="cart-total" class="text-xl text-amber-400 font-black">0 جنيه</span>
       </div>
-      <button onclick="checkout()" class="w-full btn-neon-solid py-3.5 rounded-xl font-bold flex items-center justify-center gap-2">
+      <button onclick="checkout()" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-base shadow-lg shadow-cyan-500/20 flex items-center justify-center gap-2">
         <span>إتمام الشراء عبر الواتساب</span>
       </button>
     </div>
