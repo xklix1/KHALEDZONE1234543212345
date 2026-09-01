@@ -544,53 +544,63 @@
       </div>
 
       <!-- ══════════ PAGE: COUPONS ══════════ -->
-      <div id="page-coupons" class="page" style="display:none;flex-direction:column;gap:20px">
+      <div id="page-coupons" class="page" style="display:none;flex-direction:column;gap:24px">
 
         <!-- Header -->
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
           <div>
-            <div style="font-size:20px;font-weight:900;color:white">كوبونات الخصم</div>
-            <div style="font-size:13px;color:#475569;margin-top:3px">أنشئ وأدر كوبونات الخصم لعملائك</div>
+            <div style="font-size:22px;font-weight:900;color:white">إدارة كوبونات الخصم</div>
+            <div style="font-size:13px;color:#475569;margin-top:3px">أنشئ الكوبونات وتابع نسق الاستخدام والخصومات المفعّلة</div>
           </div>
           <button onclick="document.getElementById('coupon-form-wrap').scrollIntoView({behavior:'smooth'})" class="btn btn-primary">
-            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
-            كوبون جديد
+            <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+            إنشاء كوبون جديد
           </button>
         </div>
 
         <!-- Stats strip -->
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
-          <div class="kpi" style="padding:16px 18px">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+          <div class="kpi">
             <div class="kpi-top-bar" style="background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div>
             <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">إجمالي الكوبونات</div>
-            <div style="font-size:24px;font-weight:900;color:white" id="cpn-stat-total">0</div>
+            <div style="font-size:28px;font-weight:900;color:white" id="cpn-stat-total">0</div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:100%;background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div></div>
           </div>
-          <div class="kpi" style="padding:16px 18px">
+          <div class="kpi">
             <div class="kpi-top-bar" style="background:linear-gradient(90deg,#34d399,#059669)"></div>
-            <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">كوبونات مفعّلة</div>
-            <div style="font-size:24px;font-weight:900;color:white" id="cpn-stat-active">0</div>
+            <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">الكوبونات النشطة</div>
+            <div style="font-size:28px;font-weight:900;color:#34d399" id="cpn-stat-active">0</div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:80%;background:linear-gradient(90deg,#34d399,#059669)"></div></div>
           </div>
-          <div class="kpi" style="padding:16px 18px">
+          <div class="kpi">
             <div class="kpi-top-bar" style="background:linear-gradient(90deg,#fb923c,#ea580c)"></div>
-            <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">إجمالي الاستخدام</div>
-            <div style="font-size:24px;font-weight:900;color:white" id="cpn-stat-uses">0</div>
+            <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">إجمالي الطلبات بخصم</div>
+            <div style="font-size:28px;font-weight:900;color:#fb923c" id="cpn-stat-uses">0</div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:65%;background:linear-gradient(90deg,#fb923c,#ea580c)"></div></div>
           </div>
         </div>
 
-        <!-- Coupons table -->
+        <!-- Visual Coupon Cards Showcase -->
+        <div>
+          <div style="font-size:14px;font-weight:900;color:white;margin-bottom:12px">معاينة الكوبونات المتاحة للتوزيع 🏷️</div>
+          <div id="coupons-cards-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px"></div>
+        </div>
+
+        <!-- Coupons Table -->
         <div class="panel" style="overflow:hidden">
-          <div class="panel-header">
-            <div style="font-size:15px;font-weight:900;color:white">قائمة الكوبونات</div>
+          <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between">
+            <div style="font-size:15px;font-weight:900;color:white">جدول الكوبونات التفصيلي</div>
+            <input id="cpn-search-input" oninput="renderCoupons()" class="form-input" placeholder="بحث باسم الكود..." style="width:180px;padding:7px 12px;font-size:12px">
           </div>
           <div style="overflow-x:auto">
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>الكود</th>
-                  <th>نوع الخصم</th>
-                  <th>الحد الأدنى</th>
-                  <th>الاستخدام</th>
-                  <th>الصلاحية</th>
+                  <th>كود الخصم</th>
+                  <th>قيمة الخصم</th>
+                  <th>الحد الأدنى للطلب</th>
+                  <th>معدل الاستخدام</th>
+                  <th>تاريخ الانتهاء</th>
                   <th>الحالة</th>
                   <th style="text-align:center">إجراءات</th>
                 </tr>
@@ -599,26 +609,31 @@
             </table>
           </div>
           <div id="coupons-empty" style="display:none;text-align:center;padding:48px 24px">
-            <div style="font-size:40px;margin-bottom:10px">🏷️</div>
-            <div style="font-weight:700;color:#475569">لا توجد كوبونات بعد</div>
-            <div style="font-size:12px;color:#334155;margin-top:4px">أنشئ أول كوبون باستخدام النموذج أدناه</div>
+            <div style="font-size:44px;margin-bottom:10px">🏷️</div>
+            <div style="font-weight:900;color:white;font-size:16px">لا توجد كوبونات مسجلة</div>
+            <div style="font-size:12px;color:#475569;margin-top:4px">أنشئ أول كوبون خصم باستخدام النموذج بالأسفل</div>
           </div>
         </div>
 
-        <!-- Create coupon form -->
+        <!-- Create Coupon Form -->
         <div id="coupon-form-wrap" class="panel">
-          <div class="panel-header" style="display:flex;align-items:center;gap:10px">
-            <div style="width:32px;height:32px;border-radius:9px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);display:flex;align-items:center;justify-content:center">
-              <svg width="15" height="15" fill="none" stroke="#a78bfa" viewBox="0 0 24 24" stroke-width="2"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+          <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:34px;height:34px;border-radius:10px;background:rgba(167,139,250,0.12);border:1px solid rgba(167,139,250,0.25);display:flex;align-items:center;justify-content:center">
+                <svg width="16" height="16" fill="none" stroke="#a78bfa" viewBox="0 0 24 24" stroke-width="2"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+              </div>
+              <div style="font-size:15px;font-weight:900;color:white">إنشاء كوبون خصم جديد</div>
             </div>
-            <div style="font-size:14px;font-weight:900;color:white">إنشاء كوبون خصم جديد</div>
+            <button type="button" onclick="generateRandomCouponCode()" class="btn btn-ghost btn-sm" style="color:#a78bfa;border-color:rgba(167,139,250,0.25)">
+              ✨ توليد كود عشوائي
+            </button>
           </div>
           <div class="panel-body">
             <form id="coupon-form" onsubmit="handleCreateCoupon(event)" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
               <div class="form-group">
                 <label class="form-label">كود الخصم *</label>
-                <input class="form-input" id="cpn-code" required placeholder="SUMMER25" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
-                <span style="font-size:11px;color:#334155;margin-top:3px">حروف وأرقام فقط — بدون مسافات</span>
+                <input class="form-input" id="cpn-code" required placeholder="مثال: SUMMER25" style="text-transform:uppercase;font-family:monospace;font-weight:900" oninput="this.value=this.value.toUpperCase()">
+                <span style="font-size:11px;color:#334155;margin-top:3px">أحرف إنجليزية وأرقام بدون مسافات</span>
               </div>
               <div class="form-group">
                 <label class="form-label">نوع الخصم *</label>
@@ -632,22 +647,22 @@
                 <input class="form-input" id="cpn-value" type="number" required min="1" max="100" placeholder="20">
               </div>
               <div class="form-group">
-                <label class="form-label">الحد الأدنى للطلب (جنيه)</label>
+                <label class="form-label">الحد الأدنى لقيمة الطلب (جنيه)</label>
                 <input class="form-input" id="cpn-min" type="number" min="0" value="0" placeholder="0">
               </div>
               <div class="form-group">
-                <label class="form-label">الحد الأقصى للاستخدام</label>
-                <input class="form-input" id="cpn-max" type="number" min="1" placeholder="100 (اتركه فارغاً للاستخدام غير المحدود)">
+                <label class="form-label">الحد الأقصى لعدد مرات الاستخدام</label>
+                <input class="form-input" id="cpn-max" type="number" min="1" placeholder="مثال: 100 (اتركه فارغاً للاستخدام المفتوح)">
               </div>
               <div class="form-group">
-                <label class="form-label">تاريخ الانتهاء</label>
+                <label class="form-label">تاريخ انتهاء الصلاحية</label>
                 <input class="form-input" id="cpn-exp" type="date">
               </div>
-              <div style="grid-column:1/-1;display:flex;gap:10px">
-                <button type="submit" class="btn btn-primary" style="flex:1;padding:12px">
-                  🏷️ إنشاء الكوبون
+              <div style="grid-column:1/-1;display:flex;gap:10px;padding-top:8px">
+                <button type="submit" class="btn btn-primary" style="flex:1;padding:12px;font-size:14px">
+                  🏷️ إعتماد وتفعيل الكوبون فوراً
                 </button>
-                <button type="button" onclick="document.getElementById('coupon-form').reset()" class="btn btn-ghost">مسح</button>
+                <button type="button" onclick="document.getElementById('coupon-form').reset()" class="btn btn-ghost">مسح الحقول</button>
               </div>
             </form>
           </div>
@@ -1026,31 +1041,67 @@ function handleCreate(e) {
 // ──── COUPONS ────
 function renderCoupons() {
   const coupons = getCoupons();
+  const searchQ = (document.getElementById('cpn-search-input')?.value || '').toUpperCase().trim();
+  const filtered = searchQ ? coupons.filter(c => c.code.includes(searchQ)) : coupons;
+
   const tb = document.getElementById('coupons-tbody');
   const empty = document.getElementById('coupons-empty');
-  if(!tb) return;
+  const cardsGrid = document.getElementById('coupons-cards-grid');
+
+  if (!tb) return;
 
   // Stats
   document.getElementById('cpn-stat-total').textContent = coupons.length;
-  document.getElementById('cpn-stat-active').textContent = coupons.filter(c=>c.active).length;
-  document.getElementById('cpn-stat-uses').textContent = coupons.reduce((s,c)=>s+(c.usedCount||0), 0);
+  document.getElementById('cpn-stat-active').textContent = coupons.filter(c => c.active).length;
+  document.getElementById('cpn-stat-uses').textContent = coupons.reduce((s, c) => s + (c.usedCount || 0), 0);
 
-  if(!coupons.length) { tb.innerHTML = ''; empty.style.display = 'block'; return; }
+  // Cards Showcase
+  if (cardsGrid) {
+    cardsGrid.innerHTML = coupons.slice(0, 3).map(c => `
+      <div style="background:linear-gradient(135deg,rgba(15,30,53,0.9),rgba(6,13,26,0.95));border:1px dashed rgba(167,139,250,0.3);border-radius:16px;padding:16px;position:relative;display:flex;flex-direction:column;gap:10px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <span style="font-size:10px;font-weight:900;padding:2px 8px;border-radius:6px;background:${c.active?'rgba(52,211,153,0.12)':'rgba(248,113,113,0.12)'};color:${c.active?'#34d399':'#f87171'};border:1px solid ${c.active?'rgba(52,211,153,0.25)':'rgba(248,113,113,0.25)'}">
+            ${c.active ? '🟢 مفعّل' : '🔴 معطّل'}
+          </span>
+          <span style="font-size:11px;color:#64748b;font-weight:700">${c.type === 'percent' ? `خصم ${c.value}%` : `خصم ${c.value} ج`}</span>
+        </div>
+        <div>
+          <div style="font-family:monospace;font-size:20px;font-weight:900;color:#a78bfa;letter-spacing:0.05em">${c.code}</div>
+          <div style="font-size:11px;color:#475569;margin-top:2px">${c.minOrder ? `حد أدنى: ${c.minOrder} جنيه` : 'بدون حد أدنى'}</div>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid rgba(255,255,255,0.05)">
+          <span style="font-size:11px;color:#94a3b8;font-weight:700">تم الاستخدام: ${c.usedCount || 0} مرة</span>
+          <button onclick="copyCouponCode('${c.code}')" class="btn btn-ghost btn-sm" style="padding:4px 10px;font-size:10.5px;color:#38bdf8">نسخ الكود 📋</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  if (!filtered.length) {
+    tb.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
   empty.style.display = 'none';
 
-  tb.innerHTML = coupons.map(c => `
+  tb.innerHTML = filtered.map(c => `
     <tr class="group">
-      <td><span style="font-family:monospace;font-weight:900;color:#a78bfa;font-size:14px;background:rgba(167,139,250,0.1);padding:3px 10px;border-radius:6px;border:1px solid rgba(167,139,250,0.2)">${c.code}</span></td>
       <td>
-        <span class="badge ${c.type==='percent'?'badge-purple':'badge-blue'}">
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="font-family:monospace;font-weight:900;color:#a78bfa;font-size:14px;background:rgba(167,139,250,0.1);padding:4px 10px;border-radius:8px;border:1px solid rgba(167,139,250,0.25)">${c.code}</span>
+          <button onclick="copyCouponCode('${c.code}')" style="background:none;border:none;color:#475569;cursor:pointer;font-size:12px;padding:2px" title="نسخ الكود">📋</button>
+        </div>
+      </td>
+      <td>
+        <span class="badge ${c.type==='percent'?'badge-purple':'badge-blue'}" style="font-size:12px;font-weight:800">
           ${c.type==='percent' ? `خصم ${c.value}%` : `خصم ${c.value} جنيه`}
         </span>
       </td>
-      <td style="color:#94a3b8;font-size:13px;font-weight:700">${c.minOrder ? `${c.minOrder} جنيه` : 'لا يوجد'}</td>
-      <td style="color:#94a3b8;font-size:13px font-weight:700">
-        ${c.usedCount||0} / ${c.maxUses ? c.maxUses : '∞'}
+      <td style="color:#94a3b8;font-size:13px;font-weight:700">${c.minOrder ? `${c.minOrder} جنيه` : 'لا يوجد حد أدنى'}</td>
+      <td style="color:#94a3b8;font-size:13px;font-weight:700">
+        <span style="color:white;font-weight:900">${c.usedCount||0}</span> / ${c.maxUses ? c.maxUses : 'غير محدود'}
       </td>
-      <td style="color:#64748b;font-size:12px font-weight:600">${c.expiresAt || 'دائم'}</td>
+      <td style="color:#64748b;font-size:12px;font-weight:600">${c.expiresAt || 'دائم بدون انتهاء'}</td>
       <td>
         ${c.active
           ? '<span class="badge badge-green">🟢 مفعّل</span>'
@@ -1059,13 +1110,26 @@ function renderCoupons() {
       <td style="text-align:center">
         <div style="display:flex;align-items:center;justify-content:center;gap:6px">
           <button onclick="toggleCoupon('${c.id}')" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:11px">
-            ${c.active ? 'تعطيل' : 'تفعيل'}
+            ${c.active ? 'تعطيل ⛔' : 'تفعيل 🟢'}
           </button>
           <button onclick="deleteCoupon('${c.id}')" class="btn btn-danger btn-sm" style="padding:6px 12px;font-size:11px">حذف</button>
         </div>
       </td>
     </tr>
   `).join('');
+}
+
+function generateRandomCouponCode() {
+  const prefixes = ['SAVE', 'KHALED', 'VIP', 'PROMO', 'DEAL'];
+  const pfx = prefixes[Math.floor(Math.random() * prefixes.length)];
+  const num = Math.floor(10 + Math.random() * 90);
+  const code = `${pfx}${num}`;
+  document.getElementById('cpn-code').value = code;
+  toast(`تم توليد الكود: ${code} ✨`);
+}
+
+function copyCouponCode(code) {
+  navigator.clipboard.writeText(code).then(() => toast(`تم نسخ كود الخصم (${code}) 📋`)).catch(() => toast(code));
 }
 
 function updateValueLabel() {
