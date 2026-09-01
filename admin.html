@@ -145,6 +145,11 @@
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
         <span>إضافة منتج</span>
       </div>
+      <div class="nav-item" onclick="navigate('coupons')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+        <span>كوبونات الخصم</span>
+        <span id="snav-coupons" style="margin-right:auto;background:rgba(167,139,250,0.1);color:#a78bfa;border:1px solid rgba(167,139,250,0.2);border-radius:6px;font-size:10px;font-weight:900;padding:1px 7px">0</span>
+      </div>
       <div class="nav-item" onclick="navigate('settings')">
         <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         <span>الإعدادات</span>
@@ -531,6 +536,117 @@
         </div>
       </div>
 
+      <!-- ══════════ PAGE: COUPONS ══════════ -->
+      <div id="page-coupons" class="page" style="display:none;flex-direction:column;gap:20px">
+
+        <!-- Header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+          <div>
+            <div style="font-size:20px;font-weight:900;color:white">كوبونات الخصم</div>
+            <div style="font-size:13px;color:#475569;margin-top:3px">أنشئ وأدر كوبونات الخصم لعملائك</div>
+          </div>
+          <button onclick="document.getElementById('coupon-form-wrap').scrollIntoView({behavior:'smooth'})" class="btn btn-primary">
+            <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+            كوبون جديد
+          </button>
+        </div>
+
+        <!-- Stats strip -->
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">
+          <div class="kpi" style="padding:16px 18px">
+            <div class="kpi-top-bar" style="background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div>
+            <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">إجمالي الكوبونات</div>
+            <div style="font-size:24px;font-weight:900;color:white" id="cpn-stat-total">0</div>
+          </div>
+          <div class="kpi" style="padding:16px 18px">
+            <div class="kpi-top-bar" style="background:linear-gradient(90deg,#34d399,#059669)"></div>
+            <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">كوبونات مفعّلة</div>
+            <div style="font-size:24px;font-weight:900;color:white" id="cpn-stat-active">0</div>
+          </div>
+          <div class="kpi" style="padding:16px 18px">
+            <div class="kpi-top-bar" style="background:linear-gradient(90deg,#fb923c,#ea580c)"></div>
+            <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">إجمالي الاستخدام</div>
+            <div style="font-size:24px;font-weight:900;color:white" id="cpn-stat-uses">0</div>
+          </div>
+        </div>
+
+        <!-- Coupons table -->
+        <div class="panel" style="overflow:hidden">
+          <div class="panel-header">
+            <div style="font-size:15px;font-weight:900;color:white">قائمة الكوبونات</div>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>الكود</th>
+                  <th>نوع الخصم</th>
+                  <th>الحد الأدنى</th>
+                  <th>الاستخدام</th>
+                  <th>الصلاحية</th>
+                  <th>الحالة</th>
+                  <th style="text-align:center">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="coupons-tbody"></tbody>
+            </table>
+          </div>
+          <div id="coupons-empty" style="display:none;text-align:center;padding:48px 24px">
+            <div style="font-size:40px;margin-bottom:10px">🏷️</div>
+            <div style="font-weight:700;color:#475569">لا توجد كوبونات بعد</div>
+            <div style="font-size:12px;color:#334155;margin-top:4px">أنشئ أول كوبون باستخدام النموذج أدناه</div>
+          </div>
+        </div>
+
+        <!-- Create coupon form -->
+        <div id="coupon-form-wrap" class="panel">
+          <div class="panel-header" style="display:flex;align-items:center;gap:10px">
+            <div style="width:32px;height:32px;border-radius:9px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);display:flex;align-items:center;justify-content:center">
+              <svg width="15" height="15" fill="none" stroke="#a78bfa" viewBox="0 0 24 24" stroke-width="2"><path d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+            </div>
+            <div style="font-size:14px;font-weight:900;color:white">إنشاء كوبون خصم جديد</div>
+          </div>
+          <div class="panel-body">
+            <form id="coupon-form" onsubmit="handleCreateCoupon(event)" style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="form-group">
+                <label class="form-label">كود الخصم *</label>
+                <input class="form-input" id="cpn-code" required placeholder="SUMMER25" style="text-transform:uppercase" oninput="this.value=this.value.toUpperCase()">
+                <span style="font-size:11px;color:#334155;margin-top:3px">حروف وأرقام فقط — بدون مسافات</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label">نوع الخصم *</label>
+                <select class="form-input" id="cpn-type" onchange="updateValueLabel()">
+                  <option value="percent">نسبة مئوية (%)</option>
+                  <option value="fixed">مبلغ ثابت (جنيه)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label" id="cpn-value-label">قيمة الخصم (%) *</label>
+                <input class="form-input" id="cpn-value" type="number" required min="1" max="100" placeholder="20">
+              </div>
+              <div class="form-group">
+                <label class="form-label">الحد الأدنى للطلب (جنيه)</label>
+                <input class="form-input" id="cpn-min" type="number" min="0" value="0" placeholder="0">
+              </div>
+              <div class="form-group">
+                <label class="form-label">الحد الأقصى للاستخدام</label>
+                <input class="form-input" id="cpn-max" type="number" min="1" placeholder="100 (اتركه فارغاً للاستخدام غير المحدود)">
+              </div>
+              <div class="form-group">
+                <label class="form-label">تاريخ الانتهاء</label>
+                <input class="form-input" id="cpn-exp" type="date">
+              </div>
+              <div style="grid-column:1/-1;display:flex;gap:10px">
+                <button type="submit" class="btn btn-primary" style="flex:1;padding:12px">
+                  🏷️ إنشاء الكوبون
+                </button>
+                <button type="button" onclick="document.getElementById('coupon-form').reset()" class="btn btn-ghost">مسح</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
     </div>
   </main>
 </div>
@@ -553,6 +669,12 @@ const DEFAULT_PRODUCTS = [
   { id:'minecraft-account', title:'Minecraft Account', subTitle:'Java & Bedrock Edition', price:70, oldPrice:100, badge:'عروض 💥', image:'assets/minecraft_cover.svg', category:'accounts', rating:'4.9 ★', features:['Java & Bedrock 🧱','تغيير الاسم','دخول Hypixel 🏰'] }
 ];
 
+const DEFAULT_COUPONS = [
+  { id: 'cpn-1', code: 'KHALED10', type: 'percent', value: 10, minOrder: 0, maxUses: 100, usedCount: 0, expiresAt: '2026-12-31', active: true, createdAt: '2026-09-01' },
+  { id: 'cpn-2', code: 'SAVE30', type: 'fixed', value: 30, minOrder: 100, maxUses: 50, usedCount: 0, expiresAt: '2026-11-30', active: true, createdAt: '2026-09-01' },
+  { id: 'cpn-3', code: 'VIP50', type: 'percent', value: 50, minOrder: 200, maxUses: 10, usedCount: 0, expiresAt: '2026-10-01', active: true, createdAt: '2026-09-01' }
+];
+
 const SEED_ORDERS = [
   { id:'ORD-981234', date:'2026-09-01 04:21 م', items:[{title:'GTA 5 Account',price:120,quantity:1}], total:120, status:'مكتمل' },
   { id:'ORD-765432', date:'2026-09-01 02:08 م', items:[{title:'FiveM Account',price:100,quantity:2}], total:200, status:'قيد الانتظار' },
@@ -563,9 +685,17 @@ const SEED_ORDERS = [
 
 function getProds() { try { const s = localStorage.getItem(KEYS.products); if(!s){localStorage.setItem(KEYS.products,JSON.stringify(DEFAULT_PRODUCTS));return DEFAULT_PRODUCTS;} return JSON.parse(s); } catch(e){return DEFAULT_PRODUCTS;} }
 function getOrders() { try { const s = localStorage.getItem(KEYS.orders); if(!s){localStorage.setItem(KEYS.orders,JSON.stringify(SEED_ORDERS));return SEED_ORDERS;} return JSON.parse(s); } catch(e){return SEED_ORDERS;} }
+function getCoupons() {
+  try {
+    const s = localStorage.getItem(KEYS.coupons);
+    if (!s) { localStorage.setItem(KEYS.coupons, JSON.stringify(DEFAULT_COUPONS)); return DEFAULT_COUPONS; }
+    return JSON.parse(s);
+  } catch(e) { return DEFAULT_COUPONS; }
+}
 function getSettings() { try { const s = localStorage.getItem(KEYS.settings); return s ? JSON.parse(s) : {phone:'201000000000',storeStatus:'active'}; } catch(e){return {phone:'201000000000',storeStatus:'active'};} }
 function saveProds(a) { localStorage.setItem(KEYS.products,JSON.stringify(a)); }
 function saveOrders(a) { localStorage.setItem(KEYS.orders,JSON.stringify(a)); }
+function saveCoupons(arr) { localStorage.setItem(KEYS.coupons, JSON.stringify(arr)); }
 function saveSettings(o) { localStorage.setItem(KEYS.settings,JSON.stringify(o)); }
 
 // ──── TOAST ────
@@ -854,6 +984,121 @@ function handleCreate(e) {
   updateKPIs();
   toast(`تمت إضافة "${p.title}" للمتجر 🚀`);
   navigate('products');
+}
+
+// ──── COUPONS ────
+function renderCoupons() {
+  const coupons = getCoupons();
+  const tb = document.getElementById('coupons-tbody');
+  const empty = document.getElementById('coupons-empty');
+  if(!tb) return;
+
+  // Stats
+  document.getElementById('cpn-stat-total').textContent = coupons.length;
+  document.getElementById('cpn-stat-active').textContent = coupons.filter(c=>c.active).length;
+  document.getElementById('cpn-stat-uses').textContent = coupons.reduce((s,c)=>s+(c.usedCount||0), 0);
+
+  if(!coupons.length) { tb.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  tb.innerHTML = coupons.map(c => `
+    <tr class="group">
+      <td><span style="font-family:monospace;font-weight:900;color:#a78bfa;font-size:14px;background:rgba(167,139,250,0.1);padding:3px 10px;border-radius:6px;border:1px solid rgba(167,139,250,0.2)">${c.code}</span></td>
+      <td>
+        <span class="badge ${c.type==='percent'?'badge-purple':'badge-blue'}">
+          ${c.type==='percent' ? `خصم ${c.value}%` : `خصم ${c.value} جنيه`}
+        </span>
+      </td>
+      <td style="color:#94a3b8;font-size:13px;font-weight:700">${c.minOrder ? `${c.minOrder} جنيه` : 'لا يوجد'}</td>
+      <td style="color:#94a3b8;font-size:13px font-weight:700">
+        ${c.usedCount||0} / ${c.maxUses ? c.maxUses : '∞'}
+      </td>
+      <td style="color:#64748b;font-size:12px font-weight:600">${c.expiresAt || 'دائم'}</td>
+      <td>
+        ${c.active
+          ? '<span class="badge badge-green">🟢 مفعّل</span>'
+          : '<span class="badge badge-red">🔴 معطّل</span>'}
+      </td>
+      <td style="text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+          <button onclick="toggleCoupon('${c.id}')" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:11px">
+            ${c.active ? 'تعطيل' : 'تفعيل'}
+          </button>
+          <button onclick="deleteCoupon('${c.id}')" class="btn btn-danger btn-sm" style="padding:6px 12px;font-size:11px">حذف</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function updateValueLabel() {
+  const type = document.getElementById('cpn-type').value;
+  const label = document.getElementById('cpn-value-label');
+  const valInput = document.getElementById('cpn-value');
+  if(type === 'percent') {
+    label.textContent = 'قيمة الخصم (%) *';
+    valInput.max = "100";
+    valInput.placeholder = "20";
+  } else {
+    label.textContent = 'قيمة الخصم (جنيه) *';
+    valInput.removeAttribute('max');
+    valInput.placeholder = "50";
+  }
+}
+
+function handleCreateCoupon(e) {
+  e.preventDefault();
+  const code = document.getElementById('cpn-code').value.trim().toUpperCase();
+  const type = document.getElementById('cpn-type').value;
+  const value = +document.getElementById('cpn-value').value;
+  const minOrder = +document.getElementById('cpn-min').value || 0;
+  const maxUses = +document.getElementById('cpn-max').value || null;
+  const expiresAt = document.getElementById('cpn-exp').value || null;
+
+  const coupons = getCoupons();
+  if(coupons.some(c => c.code.toUpperCase() === code)) {
+    toast('هذا الكود مستخدم بالفعل ⚠️');
+    return;
+  }
+
+  const newCpn = {
+    id: 'cpn-' + Date.now(),
+    code,
+    type,
+    value,
+    minOrder,
+    maxUses,
+    usedCount: 0,
+    expiresAt,
+    active: true,
+    createdAt: new Date().toISOString().split('T')[0]
+  };
+
+  coupons.unshift(newCpn);
+  saveCoupons(coupons);
+  document.getElementById('coupon-form').reset();
+  updateKPIs();
+  renderCoupons();
+  toast(`تم إنشاء الكوبون "${code}" بنجاح 🏷️`);
+}
+
+function toggleCoupon(id) {
+  const coupons = getCoupons().map(c => {
+    if(c.id === id) c.active = !c.active;
+    return c;
+  });
+  saveCoupons(coupons);
+  renderCoupons();
+  updateKPIs();
+  toast('تم تحديث حالة الكوبون');
+}
+
+function deleteCoupon(id) {
+  if(!confirm('هل أنت متأكد من حذف هذا الكوبون؟')) return;
+  saveCoupons(getCoupons().filter(c => c.id !== id));
+  renderCoupons();
+  updateKPIs();
+  toast('تم حذف الكوبون 🗑️');
 }
 
 // ──── SETTINGS ────
