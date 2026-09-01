@@ -412,9 +412,49 @@
               </div>
             </div>
 
+            <!-- IMAGE UPLOADER -->
             <div class="form-group">
-              <label class="form-label">رابط صورة الغلاف</label>
-              <input class="form-input" id="f-img" value="assets/gta5_cover.svg" placeholder="assets/...">
+              <label class="form-label">صورة المنتج</label>
+
+              <!-- Drop zone -->
+              <div id="img-dropzone"
+                   onclick="document.getElementById('f-img-file').click()"
+                   ondragover="event.preventDefault();this.style.borderColor='#38bdf8';this.style.background='rgba(56,189,248,0.06)'"
+                   ondragleave="this.style.borderColor='#1a3050';this.style.background='#060d1a'"
+                   ondrop="handleImgDrop(event)"
+                   style="border:2px dashed #1a3050;border-radius:14px;padding:28px 20px;text-align:center;cursor:pointer;background:#060d1a;transition:all 0.2s;position:relative">
+
+                <!-- Preview image (hidden until file chosen) -->
+                <img id="img-preview" src="" alt="preview"
+                     style="display:none;max-height:160px;max-width:100%;border-radius:10px;margin:0 auto 14px;object-fit:contain;border:1px solid #1a3050">
+
+                <!-- Placeholder icon + text -->
+                <div id="img-placeholder">
+                  <svg width="36" height="36" fill="none" stroke="#334155" viewBox="0 0 24 24" stroke-width="1.5" style="margin:0 auto 10px;display:block"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                  <div style="font-weight:700;color:#475569;font-size:13px">اسحب صورة هنا أو <span style="color:#38bdf8">اضغط للرفع</span></div>
+                  <div style="font-size:11px;color:#334155;margin-top:5px">PNG، JPG، WEBP — حتى 5 MB</div>
+                </div>
+
+                <!-- Chosen file name -->
+                <div id="img-filename" style="display:none;margin-top:10px;font-size:12px;color:#64748b;font-weight:600"></div>
+
+                <!-- Change button (shown after pick) -->
+                <button type="button" id="img-change-btn" onclick="event.stopPropagation();document.getElementById('f-img-file').click()"
+                        style="display:none;margin-top:10px;padding:6px 16px;border-radius:8px;background:#1a3050;border:none;color:#94a3b8;font-size:12px;font-weight:700;cursor:pointer">
+                  تغيير الصورة
+                </button>
+              </div>
+
+              <!-- Hidden file input -->
+              <input type="file" id="f-img-file" accept="image/*" style="display:none" onchange="handleImgFile(this)">
+
+              <!-- Fallback URL input (collapsed) -->
+              <div style="margin-top:8px;display:flex;align-items:center;gap:8px">
+                <div style="flex:1;height:1px;background:#1a3050"></div>
+                <span style="font-size:11px;color:#334155;font-weight:700;white-space:nowrap">أو أدخل رابط</span>
+                <div style="flex:1;height:1px;background:#1a3050"></div>
+              </div>
+              <input class="form-input" id="f-img" placeholder="https://example.com/image.jpg أو assets/..." style="margin-top:8px" oninput="handleImgUrl(this.value)">
             </div>
 
             <div class="form-group">
@@ -721,9 +761,81 @@ function resetProducts() {
   saveProds(DEFAULT_PRODUCTS); renderProducts(); updateKPIs(); toast('تمت إعادة ضبط المنتجات');
 }
 
+// ──── IMAGE UPLOAD ────
+let _uploadedImgBase64 = ''; // holds base64 of uploaded file
+
+function setImgPreview(src, name) {
+  const preview = document.getElementById('img-preview');
+  const placeholder = document.getElementById('img-placeholder');
+  const fname = document.getElementById('img-filename');
+  const changeBtn = document.getElementById('img-change-btn');
+  const dz = document.getElementById('img-dropzone');
+
+  preview.src = src;
+  preview.style.display = 'block';
+  placeholder.style.display = 'none';
+  fname.textContent = name || '';
+  fname.style.display = name ? 'block' : 'none';
+  changeBtn.style.display = 'inline-block';
+  dz.style.borderColor = '#38bdf8';
+  dz.style.background = 'rgba(56,189,248,0.03)';
+
+  // Clear URL input if using file upload
+  if(src.startsWith('data:')) {
+    document.getElementById('f-img').value = '';
+    _uploadedImgBase64 = src;
+  }
+}
+
+function handleImgFile(input) {
+  const file = input.files[0];
+  if(!file) return;
+  if(file.size > 5 * 1024 * 1024) { toast('الصورة أكبر من 5 MB — اختر صورة أصغر','⚠️'); return; }
+  const reader = new FileReader();
+  reader.onload = e => setImgPreview(e.target.result, file.name);
+  reader.readAsDataURL(file);
+}
+
+function handleImgDrop(e) {
+  e.preventDefault();
+  const dz = document.getElementById('img-dropzone');
+  dz.style.borderColor = '#1a3050';
+  dz.style.background = '#060d1a';
+  const file = e.dataTransfer.files[0];
+  if(!file || !file.type.startsWith('image/')) { toast('الملف ليس صورة صالحة','⚠️'); return; }
+  if(file.size > 5 * 1024 * 1024) { toast('الصورة أكبر من 5 MB — اختر صورة أصغر','⚠️'); return; }
+  // Inject into file input
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  document.getElementById('f-img-file').files = dt.files;
+  const reader = new FileReader();
+  reader.onload = ev => setImgPreview(ev.target.result, file.name);
+  reader.readAsDataURL(file);
+}
+
+function handleImgUrl(url) {
+  if(!url.trim()) return;
+  _uploadedImgBase64 = ''; // clear any uploaded file
+  setImgPreview(url, '');
+}
+
+function resetImgUploader() {
+  _uploadedImgBase64 = '';
+  document.getElementById('img-preview').style.display = 'none';
+  document.getElementById('img-placeholder').style.display = 'block';
+  document.getElementById('img-filename').style.display = 'none';
+  document.getElementById('img-change-btn').style.display = 'none';
+  document.getElementById('img-dropzone').style.borderColor = '#1a3050';
+  document.getElementById('img-dropzone').style.background = '#060d1a';
+  document.getElementById('f-img-file').value = '';
+  document.getElementById('f-img').value = '';
+}
+
 // ──── ADD PRODUCT ────
 function handleCreate(e) {
   e.preventDefault();
+  // Resolve image: uploaded base64 > typed URL > default
+  const imageVal = _uploadedImgBase64 || document.getElementById('f-img').value.trim() || 'assets/gta5_cover.svg';
   const p = {
     id:'prod-'+Date.now(),
     title:document.getElementById('f-title').value.trim(),
@@ -732,12 +844,13 @@ function handleCreate(e) {
     oldPrice:+document.getElementById('f-old').value||null,
     badge:document.getElementById('f-badge').value.trim()||'جديد ⚡',
     category:document.getElementById('f-cat').value,
-    image:document.getElementById('f-img').value.trim()||'assets/gta5_cover.svg',
+    image: imageVal,
     rating:'5.0 ★',
     features:document.getElementById('f-feat').value.split('\n').map(s=>s.trim()).filter(Boolean)
   };
   const prods = getProds(); prods.unshift(p); saveProds(prods);
   document.getElementById('product-form').reset();
+  resetImgUploader();
   updateKPIs();
   toast(`تمت إضافة "${p.title}" للمتجر 🚀`);
   navigate('products');
