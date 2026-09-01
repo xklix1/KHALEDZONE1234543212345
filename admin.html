@@ -345,7 +345,14 @@
             <table class="data-table">
               <thead>
                 <tr>
-                  <th>رقم الطلب</th><th>التاريخ</th><th>المنتجات</th><th>المبلغ</th><th>الحالة</th><th style="text-align:center">إجراءات</th>
+                  <th>رقم الطلب</th>
+                  <th>العميل والهاتف</th>
+                  <th>طريقة الدفع</th>
+                  <th>المنتجات</th>
+                  <th>الكوبون والخصم</th>
+                  <th>المبلغ</th>
+                  <th>الحالة</th>
+                  <th style="text-align:center">إجراءات</th>
                 </tr>
               </thead>
               <tbody id="orders-body"></tbody>
@@ -799,31 +806,61 @@ function renderOrders() {
   const q = (document.getElementById('order-q')?.value||'').toLowerCase();
   const f = document.getElementById('order-filter')?.value||'';
   let orders = getOrders();
-  if(q) orders = orders.filter(o=>o.id.toLowerCase().includes(q)||o.items.some(i=>i.title.toLowerCase().includes(q)));
+  if(q) orders = orders.filter(o => 
+    o.id.toLowerCase().includes(q) || 
+    (o.customerName && o.customerName.toLowerCase().includes(q)) || 
+    (o.customerPhone && o.customerPhone.includes(q)) ||
+    (o.couponCode && o.couponCode.toLowerCase().includes(q)) ||
+    o.items.some(i=>i.title.toLowerCase().includes(q))
+  );
   if(f) orders = orders.filter(o=>o.status===f);
   const tb = document.getElementById('orders-body');
   const empty = document.getElementById('orders-empty');
   if(!tb) return;
   if(!orders.length){tb.innerHTML='';empty.style.display='block';return;}
   empty.style.display='none';
+
   tb.innerHTML = orders.map(o=>`
     <tr class="group">
-      <td><span style="font-family:monospace;font-weight:900;color:#38bdf8;font-size:13px">${o.id}</span></td>
-      <td style="color:#64748b;font-size:12px">${o.date}</td>
+      <td>
+        <span style="font-family:monospace;font-weight:900;color:#38bdf8;font-size:13px">${o.id}</span>
+        <div style="font-size:10.5px;color:#475569;margin-top:2px">${o.date}</div>
+      </td>
+      <td>
+        <div style="font-weight:700;color:white;font-size:13px">${o.customerName || 'عميل مباشر'}</div>
+        <div style="font-size:11px;color:#38bdf8;font-weight:700;margin-top:1px">${o.customerPhone || 'بدون رقم'}</div>
+      </td>
+      <td>
+        <span class="badge badge-blue" style="font-size:11px">${o.paymentMethod || 'فودافون كاش'}</span>
+      </td>
       <td>
         <div style="font-weight:700;color:white;font-size:13px">${o.items.map(i=>i.title).join('، ')}</div>
-        <div style="font-size:11px;color:#334155;margin-top:2px">${o.items.reduce((s,i)=>s+i.quantity,0)} عنصر</div>
+        <div style="font-size:11px;color:#334155;margin-top:2px">${o.items.reduce((s,i)=>s+i.quantity,0)} عناصر</div>
       </td>
-      <td><span style="font-weight:900;color:#fbbf24;font-size:15px">${o.total} جنيه</span></td>
+      <td>
+        ${o.couponCode 
+          ? `<span class="badge badge-purple" style="font-size:11px">${o.couponCode} (-${o.discount||0}ج)</span>` 
+          : `<span style="font-size:11px;color:#475569">بدون كوبون</span>`}
+      </td>
+      <td>
+        <span style="font-weight:900;color:#fbbf24;font-size:15px">${o.total} جنيه</span>
+      </td>
       <td>${o.status==='مكتمل'?'<span class="badge badge-green">✓ مكتمل</span>':'<span class="badge badge-amber">⏳ قيد الانتظار</span>'}</td>
       <td style="text-align:center">
         <div style="display:flex;align-items:center;justify-content:center;gap:6px">
-          <button onclick="toggleStatus('${o.id}')" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:11px">تغيير الحالة</button>
-          <button onclick="deleteOrder('${o.id}')" class="btn btn-danger btn-sm" style="padding:6px 12px;font-size:11px">حذف</button>
+          <button onclick="viewAdminInvoice('${o.id}')" class="btn btn-ghost btn-sm" style="padding:5px 10px;font-size:11px;color:#38bdf8">تفاصيل</button>
+          <button onclick="toggleStatus('${o.id}')" class="btn btn-ghost btn-sm" style="padding:5px 10px;font-size:11px">تغيير</button>
+          <button onclick="deleteOrder('${o.id}')" class="btn btn-danger btn-sm" style="padding:5px 10px;font-size:11px">حذف</button>
         </div>
       </td>
     </tr>
   `).join('');
+}
+
+function viewAdminInvoice(orderId) {
+  const o = getOrders().find(x=>x.id===orderId);
+  if(!o) return;
+  alert(`📋 تفاصيل الطلب [${o.id}]\n\nاسم العميل: ${o.customerName || 'عميل مباشر'}\nالهاتف: ${o.customerPhone || 'غير مسجل'}\nطريقة الدفع: ${o.paymentMethod || 'فودافون كاش'}\nالكوبون: ${o.couponCode || 'لا يوجد'} (-${o.discount||0} جنيه)\nالمبلغ النهائي: ${o.total} جنيه\n\nالمنتجات:\n${o.items.map(i=>`• ${i.title} (${i.quantity}x)`).join('\n')}\n\nملاحظات: ${o.notes || 'لا يوجد'}`);
 }
 
 function toggleStatus(id) {
