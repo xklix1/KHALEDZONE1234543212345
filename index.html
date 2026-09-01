@@ -53,12 +53,12 @@
 
       <!-- Desktop Nav -->
       <nav class="hidden lg:flex items-center gap-1">
-        <a href="/" class="nav-link active">الرئيسية</a>
-        <a href="/store" class="nav-link">المتجر</a>
-        <a href="/offers" class="nav-link">العروض <span class="text-orange-400">🔥</span></a>
-        <a href="/services" class="nav-link">الخدمات</a>
-        <a href="/about" class="nav-link">من نحن</a>
-        <a href="/contact" class="nav-link">تواصل معنا</a>
+        <a href="index.html" class="nav-link active">الرئيسية</a>
+        <a href="store.html" class="nav-link">المتجر</a>
+        <a href="offers.html" class="nav-link">العروض <span class="text-orange-400">🔥</span></a>
+        <a href="services.html" class="nav-link">الخدمات</a>
+        <a href="about.html" class="nav-link">من نحن</a>
+        <a href="contact.html" class="nav-link">تواصل معنا</a>
       </nav>
 
       <!-- Actions -->
@@ -92,12 +92,12 @@
   <!-- Mobile Nav -->
   <div id="mobile-nav" class="hidden lg:hidden border-b border-white/5 bg-[#060d1a]/95 backdrop-blur-2xl">
     <div class="max-w-7xl mx-auto px-4 py-4 grid grid-cols-2 gap-2">
-      <a href="/" class="nav-link active text-center">الرئيسية</a>
-      <a href="/store" class="nav-link text-center">المتجر</a>
-      <a href="/offers" class="nav-link text-center">العروض 🔥</a>
-      <a href="/services" class="nav-link text-center">الخدمات</a>
-      <a href="/about" class="nav-link text-center">من نحن</a>
-      <a href="/contact" class="nav-link text-center">تواصل معنا</a>
+      <a href="index.html" class="nav-link active text-center">الرئيسية</a>
+      <a href="store.html" class="nav-link text-center">المتجر</a>
+      <a href="offers.html" class="nav-link text-center">العروض 🔥</a>
+      <a href="services.html" class="nav-link text-center">الخدمات</a>
+      <a href="about.html" class="nav-link text-center">من نحن</a>
+      <a href="contact.html" class="nav-link text-center">تواصل معنا</a>
     </div>
   </div>
 </header>
@@ -288,7 +288,7 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
 
       <!-- GTA 5 -->
-      <div class="product-card flex flex-col group">
+      <div class="product-card flex flex-col group cursor-pointer" onclick="if(!event.target.closest('button')) location.href='product.html?id=gta5-account'">
         <div class="relative h-40 overflow-hidden bg-slate-900">
           <img src="assets/gta5_cover.svg" alt="GTA 5 Account" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -297,14 +297,14 @@
         <div class="p-4 flex flex-col flex-1 gap-3">
           <div>
             <div class="text-[10px] text-slate-500 font-bold uppercase tracking-wider mb-0.5">GTA V · Online</div>
-            <h3 class="font-black text-white text-[15px] leading-snug">GTA 5 Account</h3>
+            <h3 class="font-black text-white text-[15px] leading-snug group-hover:text-cyan-400 transition-colors">GTA 5 Account</h3>
           </div>
           <div class="flex items-center gap-2 mt-auto">
             <div class="flex-1">
               <div class="text-[11px] text-slate-500 line-through">160 جنيه</div>
               <div class="text-xl font-black text-amber-400">120 جنيه</div>
             </div>
-            <button onclick="addToCart('gta5-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
+            <button onclick="event.stopPropagation();addToCart('gta5-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
               شراء
             </button>
@@ -313,7 +313,7 @@
       </div>
 
       <!-- FiveM -->
-      <div class="product-card flex flex-col group">
+      <div class="product-card flex flex-col group cursor-pointer" onclick="if(!event.target.closest('button')) location.href='product.html?id=fivem-account'">
         <div class="relative h-40 overflow-hidden bg-slate-900">
           <img src="assets/fivem_cover.svg" alt="FiveM Account" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -322,14 +322,14 @@
         <div class="p-4 flex flex-col flex-1 gap-3">
           <div>
             <div class="text-[10px] text-amber-400 font-bold uppercase tracking-wider mb-0.5">Roleplay · Bypass</div>
-            <h3 class="font-black text-white text-[15px] leading-snug">FiveM Account</h3>
+            <h3 class="font-black text-white text-[15px] leading-snug group-hover:text-cyan-400 transition-colors">FiveM Account</h3>
           </div>
           <div class="flex items-center gap-2 mt-auto">
             <div class="flex-1">
               <div class="text-[11px] text-slate-500 line-through">140 جنيه</div>
               <div class="text-xl font-black text-amber-400">100 جنيه</div>
             </div>
-            <button onclick="addToCart('fivem-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
+            <button onclick="event.stopPropagation();addToCart('fivem-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
               شراء
             </button>
@@ -338,7 +338,7 @@
       </div>
 
       <!-- RDR2 -->
-      <div class="product-card flex flex-col group">
+      <div class="product-card flex flex-col group cursor-pointer" onclick="if(!event.target.closest('button')) location.href='product.html?id=rdr2-account'">
         <div class="relative h-40 overflow-hidden bg-slate-900">
           <img src="assets/rdr2_cover.svg" alt="RDR2 Account" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -347,14 +347,14 @@
         <div class="p-4 flex flex-col flex-1 gap-3">
           <div>
             <div class="text-[10px] text-rose-400 font-bold uppercase tracking-wider mb-0.5">Rockstar Games</div>
-            <h3 class="font-black text-white text-[15px] leading-snug">RDR2 Account</h3>
+            <h3 class="font-black text-white text-[15px] leading-snug group-hover:text-cyan-400 transition-colors">RDR2 Account</h3>
           </div>
           <div class="flex items-center gap-2 mt-auto">
             <div class="flex-1">
               <div class="text-[11px] text-slate-500 line-through">200 جنيه</div>
               <div class="text-xl font-black text-amber-400">150 جنيه</div>
             </div>
-            <button onclick="addToCart('rdr2-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
+            <button onclick="event.stopPropagation();addToCart('rdr2-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
               شراء
             </button>
@@ -363,7 +363,7 @@
       </div>
 
       <!-- Fortnite -->
-      <div class="product-card flex flex-col group">
+      <div class="product-card flex flex-col group cursor-pointer" onclick="if(!event.target.closest('button')) location.href='product.html?id=fortnite-account'">
         <div class="relative h-40 overflow-hidden bg-slate-900">
           <img src="assets/fortnite_cover.svg" alt="Fortnite Account" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -372,14 +372,14 @@
         <div class="p-4 flex flex-col flex-1 gap-3">
           <div>
             <div class="text-[10px] text-purple-400 font-bold uppercase tracking-wider mb-0.5">Epic Games</div>
-            <h3 class="font-black text-white text-[15px] leading-snug">Fortnite Account</h3>
+            <h3 class="font-black text-white text-[15px] leading-snug group-hover:text-cyan-400 transition-colors">Fortnite Account</h3>
           </div>
           <div class="flex items-center gap-2 mt-auto">
             <div class="flex-1">
               <div class="text-[11px] text-slate-500 line-through">120 جنيه</div>
               <div class="text-xl font-black text-amber-400">90 جنيه</div>
             </div>
-            <button onclick="addToCart('fortnite-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
+            <button onclick="event.stopPropagation();addToCart('fortnite-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
               شراء
             </button>
@@ -388,7 +388,7 @@
       </div>
 
       <!-- Minecraft -->
-      <div class="product-card flex flex-col group">
+      <div class="product-card flex flex-col group cursor-pointer" onclick="if(!event.target.closest('button')) location.href='product.html?id=minecraft-account'">
         <div class="relative h-40 overflow-hidden bg-slate-900">
           <img src="assets/minecraft_cover.svg" alt="Minecraft Account" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
           <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -397,14 +397,14 @@
         <div class="p-4 flex flex-col flex-1 gap-3">
           <div>
             <div class="text-[10px] text-emerald-400 font-bold uppercase tracking-wider mb-0.5">Mojang Studios</div>
-            <h3 class="font-black text-white text-[15px] leading-snug">Minecraft Account</h3>
+            <h3 class="font-black text-white text-[15px] leading-snug group-hover:text-cyan-400 transition-colors">Minecraft Account</h3>
           </div>
           <div class="flex items-center gap-2 mt-auto">
             <div class="flex-1">
               <div class="text-[11px] text-slate-500 line-through">100 جنيه</div>
               <div class="text-xl font-black text-amber-400">70 جنيه</div>
             </div>
-            <button onclick="addToCart('minecraft-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
+            <button onclick="event.stopPropagation();addToCart('minecraft-account')" class="btn-primary px-4 py-2.5 text-xs flex items-center gap-1.5">
               <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
               شراء
             </button>
