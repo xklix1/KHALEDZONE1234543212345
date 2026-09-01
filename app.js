@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.openProductModal = function (productId) {
-    window.location.href = `product.html?id=${productId}`;
+    window.location.href = `/product?id=${productId}`;
   };
 
   window.checkout = function () {
@@ -228,7 +228,7 @@ document.addEventListener('DOMContentLoaded', () => {
         searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لم يتم العثور على نتائج</p>';
       } else {
         searchResults.innerHTML = filtered.map(p => `
-          <a href="product.html?id=${p.id}" class="flex items-center justify-between p-3 hover:bg-cyan-950/60 rounded-xl cursor-pointer border border-transparent hover:border-cyan-500/30 transition">
+          <a href="/product?id=${p.id}" class="flex items-center justify-between p-3 hover:bg-cyan-950/60 rounded-xl cursor-pointer border border-transparent hover:border-cyan-500/30 transition">
             <div class="flex items-center gap-3">
               <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
               <div>
