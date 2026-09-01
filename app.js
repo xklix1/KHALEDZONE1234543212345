@@ -2,9 +2,11 @@
   'use strict';
 
   const STORAGE_KEY = 'khaled_zone_cart';
-  const WHATSAPP_PHONE = '201000000000';
+  const PRODUCTS_STORAGE_KEY = 'khaled_zone_products';
+  const ORDERS_STORAGE_KEY = 'khaled_zone_orders';
+  const SETTINGS_STORAGE_KEY = 'khaled_zone_settings';
 
-  const CatalogRepository = [
+  const DefaultProducts = [
     {
       id: 'gta5-account',
       title: 'GTA 5 Account',
@@ -67,6 +69,30 @@
     }
   ];
 
+  function loadProducts() {
+    try {
+      const stored = localStorage.getItem(PRODUCTS_STORAGE_KEY);
+      if (stored) {
+        return JSON.parse(stored);
+      }
+      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(DefaultProducts));
+      return DefaultProducts;
+    } catch (e) {
+      return DefaultProducts;
+    }
+  }
+
+  function loadSettings() {
+    try {
+      const stored = localStorage.getItem(SETTINGS_STORAGE_KEY);
+      return stored ? JSON.parse(stored) : { phone: '201000000000', storeStatus: 'active' };
+    } catch (e) {
+      return { phone: '201000000000', storeStatus: 'active' };
+    }
+  }
+
+  const CatalogRepository = loadProducts();
+  const StoreSettings = loadSettings();
   window.products = CatalogRepository;
 
   class CartManager {
@@ -79,7 +105,6 @@
         const raw = localStorage.getItem(STORAGE_KEY);
         return raw ? JSON.parse(raw) : [];
       } catch (err) {
-        console.error('Cart state load exception:', err);
         return [];
       }
     }
@@ -179,9 +204,9 @@
     container.innerHTML = cartService.items
       .map(
         (item) => `
-        <div class="flex items-center justify-between p-3 bg-navy-900/60 rounded-xl border border-cyan-500/20">
+        <div class="flex items-center justify-between p-3 bg-slate-900/80 rounded-xl border border-slate-800">
           <div class="flex items-center gap-3">
-            <img src="${item.image}" alt="${item.title}" class="w-12 h-12 object-cover rounded-lg border border-cyan-400/30">
+            <img src="${item.image}" alt="${item.title}" class="w-12 h-12 object-cover rounded-lg border border-slate-700">
             <div>
               <h4 class="font-bold text-white text-sm">${item.title}</h4>
               <p class="text-xs text-cyan-400">${item.price} جنيه × ${item.quantity}</p>
@@ -243,11 +268,27 @@
     }
 
     const total = cartService.getTotalAmount();
+    const orderId = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
     const summary = cartService.items.map((i) => `• ${i.title} (${i.quantity}x) - ${i.price * i.quantity} جنيه`).join('%0A');
-    const message = `مرحباً KLIX ! أريد إتمام طلب من KHALED ZONE:%0A${summary}%0A%0Aالإجمالي: ${total} جنيه`;
-    const targetUrl = `https://wa.me/${WHATSAPP_PHONE}?text=${message}`;
+    
+    // Record Order in LocalStorage for Admin Dashboard
+    try {
+      const orders = JSON.parse(localStorage.getItem(ORDERS_STORAGE_KEY) || '[]');
+      orders.unshift({
+        id: orderId,
+        date: new Date().toLocaleDateString('ar-EG', { hour: '2-digit', minute: '2-digit' }),
+        items: cartService.items,
+        total: total,
+        status: 'قيد الانتظار'
+      });
+      localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(orders));
+    } catch (e) {}
 
-    alert(`🎉 شكراً لطلبك من KHALED ZONE!\n\nإجمالي الطلب: ${total} جنيه\nسيتم توجيهك الآن للواتساب لتأكيد الاستلام الفوري.`);
+    const message = `مرحباً KLIX ! أريد إتمام طلب رقم [${orderId}] من KHALED ZONE:%0A${summary}%0A%0Aالإجمالي: ${total} جنيه`;
+    const phone = StoreSettings.phone || '201000000000';
+    const targetUrl = `https://wa.me/${phone}?text=${message}`;
+
+    alert(`🎉 شكراً لطلبك من KHALED ZONE!\n\nرقم الطلب: ${orderId}\nإجمالي المبلغ: ${total} جنيه\nسيتم توجيهك الآن للواتساب لتأكيد الاستلام الفوري.`);
     cartService.clear();
     syncCartUI();
     window.open(targetUrl, '_blank');
@@ -263,7 +304,7 @@
       searchInput.addEventListener('input', (e) => {
         const query = e.target.value.toLowerCase().trim();
         if (!query) {
-          searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">اكتب اسم اللعبة أو الخدمة للبحث...</p>';
+          searchResults.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">اكتب اسم اللعبة أو الخدمة للبحث...</p>';
           return;
         }
 
@@ -272,17 +313,17 @@
         );
 
         if (matches.length === 0) {
-          searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لم يتم العثور على نتائج</p>';
+          searchResults.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">لم يتم العثور على نتائج</p>';
         } else {
           searchResults.innerHTML = matches
             .map(
               (p) => `
-            <a href="/product?id=${p.id}" class="flex items-center justify-between p-3 hover:bg-cyan-950/60 rounded-xl cursor-pointer border border-transparent hover:border-cyan-500/30 transition">
+            <a href="/product?id=${p.id}" class="flex items-center justify-between p-3 hover:bg-slate-900 rounded-xl cursor-pointer border border-transparent hover:border-slate-800 transition-all">
               <div class="flex items-center gap-3">
                 <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
                 <div>
                   <div class="font-bold text-white text-sm">${p.title}</div>
-                  <div class="text-xs text-gray-400">${p.subTitle}</div>
+                  <div class="text-xs text-slate-400">${p.subTitle}</div>
                 </div>
               </div>
               <div class="text-cyan-400 font-bold text-sm">${p.price} جنيه</div>

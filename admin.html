@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم المالك - KHALED ZONE Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: { 500: '#0ea5e9', 600: '#0284c7', 950: '#030712' }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- ADMIN HEADER -->
+  <header class="sticky top-0 z-40 bg-slate-950/90 backdrop-blur-xl border-b border-slate-800 shadow-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 p-0.5 shadow-md shadow-cyan-500/20">
+          <div class="w-full h-full bg-slate-950 rounded-[10px] flex items-center justify-center">
+            <span class="text-xl">👑</span>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center gap-2 font-black text-lg">
+            <span>KHALED <span class="text-cyan-400">ZONE</span></span>
+            <span class="bg-cyan-950 text-cyan-400 border border-cyan-500/40 text-[10px] font-bold px-2 py-0.5 rounded-md">ADMIN PORTAL</span>
+          </div>
+          <p class="text-xs text-slate-400">لوحة تحكم المالك والإدارة المركزية 🛠️</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs font-semibold text-emerald-400">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span>المتجر يعمل بانتظام 🟢</span>
+        </div>
+        <a href="/" class="px-4 py-2 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white font-bold text-xs flex items-center gap-2 transition-all">
+          <span>العودة للمتجر</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-10">
+
+    <!-- KPI OVERVIEW CARDS -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      
+      <div class="bg-slate-900/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-800 space-y-3 relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+          <span>إجمالي المبيعات الأسبوعية</span>
+          <span class="text-emerald-400 bg-emerald-950 border border-emerald-500/40 px-2 py-0.5 rounded-md">+18% 📈</span>
+        </div>
+        <div class="text-3xl font-black text-amber-400" id="stat-revenue">45,800 جنيه</div>
+        <p class="text-[11px] text-slate-500">تم تسجيلها عبر تحويلات الواتساب و InstaPay</p>
+      </div>
+
+      <div class="bg-slate-900/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-800 space-y-3 relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+          <span>إجمالي الطلبات</span>
+          <span class="text-cyan-400 bg-cyan-950 border border-cyan-500/40 px-2 py-0.5 rounded-md">مباشر ⚡</span>
+        </div>
+        <div class="text-3xl font-black text-white" id="stat-orders-count">342 طلب</div>
+        <p class="text-[11px] text-slate-500">منها 312 طلب مكتمل بنسبة تسليم 99%</p>
+      </div>
+
+      <div class="bg-slate-900/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-800 space-y-3 relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+          <span>الحسابات المتاحة بالمخزون</span>
+          <span class="text-purple-400 bg-purple-950 border border-purple-500/40 px-2 py-0.5 rounded-md">جاهز للبيع</span>
+        </div>
+        <div class="text-3xl font-black text-cyan-400" id="stat-products-count">5 منتجات</div>
+        <p class="text-[11px] text-slate-500">GTA V, FiveM, RDR2, Fortnite, Minecraft</p>
+      </div>
+
+      <div class="bg-slate-900/80 backdrop-blur-xl p-6 rounded-3xl border border-slate-800 space-y-3 relative overflow-hidden">
+        <div class="flex items-center justify-between text-slate-400 text-xs font-bold">
+          <span>تقييم رضا العملاء</span>
+          <span class="text-amber-400 bg-amber-950 border border-amber-500/40 px-2 py-0.5 rounded-md">5.0 ⭐</span>
+        </div>
+        <div class="text-3xl font-black text-emerald-400">99.4%</div>
+        <p class="text-[11px] text-slate-500">استناداً إلى 1,250 تقييم مؤكد</p>
+      </div>
+
+    </div>
+
+    <!-- TAB NAVIGATION -->
+    <div class="flex border-b border-slate-800 space-x-4 space-x-reverse font-bold text-sm">
+      <button onclick="switchTab('orders-tab')" id="btn-orders-tab" class="pb-4 border-b-2 border-cyan-400 text-cyan-400 flex items-center gap-2">
+        <span>📋 إدارة الطلبات الحية</span>
+      </button>
+      <button onclick="switchTab('products-tab')" id="btn-products-tab" class="pb-4 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2">
+        <span>📦 قائمة المنتجات والحسابات</span>
+      </button>
+      <button onclick="switchTab('add-product-tab')" id="btn-add-product-tab" class="pb-4 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2">
+        <span>➕ إضافة منتج/حساب جديد</span>
+      </button>
+      <button onclick="switchTab('settings-tab')" id="btn-settings-tab" class="pb-4 border-b-2 border-transparent text-slate-400 hover:text-white flex items-center gap-2">
+        <span>⚙️ إعدادات المتجر والواتساب</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: ORDERS MANAGEMENT -->
+    <div id="orders-tab" class="space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-black text-white">الطلبات المسجلة حديثاً 📋</h2>
+        <button onclick="clearAllOrders()" class="text-xs text-rose-400 hover:underline">مسح أرشيف الطلبات</button>
+      </div>
+
+      <div class="bg-slate-900/80 backdrop-blur-xl rounded-3xl border border-slate-800 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-right text-sm">
+            <thead class="bg-slate-950 text-slate-400 border-b border-slate-800 font-bold text-xs uppercase">
+              <tr>
+                <th class="p-4">رقم الطلب</th>
+                <th class="p-4">التاريخ والوقت</th>
+                <th class="p-4">المنتجات المطلوبة</th>
+                <th class="p-4">إجمالي المبلغ</th>
+                <th class="p-4">حالة الطلب</th>
+                <th class="p-4 text-center">الإجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body" class="divide-y divide-slate-800">
+              <!-- Rendered Dynamically -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 2: PRODUCTS MANAGEMENT -->
+    <div id="products-tab" class="space-y-6 hidden">
+      <div class="flex items-center justify-between">
+        <h2 class="text-xl font-black text-white">المنتجات المتاحة في المتجر 📦</h2>
+        <button onclick="resetDefaultProducts()" class="text-xs text-cyan-400 hover:underline">إعادة ضبط المنتجات الافتراضية</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="products-grid-admin">
+        <!-- Rendered Dynamically -->
+      </div>
+    </div>
+
+    <!-- TAB 3: ADD NEW PRODUCT FORM -->
+    <div id="add-product-tab" class="space-y-6 hidden">
+      <h2 class="text-xl font-black text-white">إضافة حساب أو لعبة جديدة للمتجر ➕</h2>
+
+      <form id="add-product-form" onsubmit="handleCreateProduct(event)" class="bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-slate-800 space-y-6 max-w-3xl">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-300">اسم المنتج / اللعبة *</label>
+            <input type="text" id="prod-title" required placeholder="مثال: Valorant VIP Account" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-300">الوصف الفرعي *</label>
+            <input type="text" id="prod-subtitle" required placeholder="مثال: حساب فل سكنات + شغال على الكل" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-300">السعر (جنيه) *</label>
+            <input type="number" id="prod-price" required placeholder="130" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-300">السعر القديم (اختياري)</label>
+            <input type="number" id="prod-oldprice" placeholder="180" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-300">الشارة (Badge)</label>
+            <input type="text" id="prod-badge" placeholder="مثال: الأكثر مبيعاً 🔥" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+          </div>
+
+          <div class="space-y-2">
+            <label class="text-xs font-bold text-slate-300">التصنيف (Category)</label>
+            <select id="prod-category" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+              <option value="accounts">حسابات ألعاب (accounts)</option>
+              <option value="fivem">FiveM سيرفرات (fivem)</option>
+              <option value="services">خدمات رقمية (services)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-300">رابط صورة الغلاف (SVG/PNG/JPG)</label>
+          <input type="text" id="prod-image" value="assets/gta5_cover.svg" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-300">المميزات (مفصولة بفواصل ,)</label>
+          <textarea id="prod-features" rows="3" placeholder="تفعيل فوري ⚡, ضمان مدى الحياة 🛡️, حساب كامل الملكية 👑" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400"></textarea>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold shadow-lg shadow-cyan-500/20">
+          حفظ وإضافة للمتجر فوراً 🚀
+        </button>
+      </form>
+    </div>
+
+    <!-- TAB 4: STORE SETTINGS -->
+    <div id="settings-tab" class="space-y-6 hidden">
+      <h2 class="text-xl font-black text-white">إعدادات المتجر واستلام الطلبات ⚙️</h2>
+
+      <form id="settings-form" onsubmit="handleSaveSettings(event)" class="bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl border border-slate-800 space-y-6 max-w-2xl">
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-300">رقم الواتساب لاستلام الطلبات (مع كود الدولة)</label>
+          <input type="text" id="setting-phone" value="201000000000" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+          <p class="text-[11px] text-slate-500">سيتم توجيه جميع طلبات الشراء من الزوار تلقائياً لهذا الرقم عبر WhatsApp.</p>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-300">حالة المتجر</label>
+          <select id="setting-status" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-cyan-400">
+            <option value="active">متصل ويعمل بانتظام 🟢</option>
+            <option value="maintenance">وضع الصيانة المؤقت 🔴</option>
+          </select>
+        </div>
+
+        <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-400 hover:to-teal-500 text-white font-bold shadow-lg shadow-emerald-500/20">
+          حفظ الإعدادات 💾
+        </button>
+      </form>
+    </div>
+
+  </div>
+
+  <script>
+    const PRODUCTS_KEY = 'khaled_zone_products';
+    const ORDERS_KEY = 'khaled_zone_orders';
+    const SETTINGS_KEY = 'khaled_zone_settings';
+
+    function switchTab(tabId) {
+      const tabs = ['orders-tab', 'products-tab', 'add-product-tab', 'settings-tab'];
+      tabs.forEach(t => {
+        const el = document.getElementById(t);
+        const btn = document.getElementById('btn-' + t);
+        if (el && btn) {
+          if (t === tabId) {
+            el.classList.remove('hidden');
+            btn.classList.add('border-cyan-400', 'text-cyan-400');
+            btn.classList.remove('border-transparent', 'text-slate-400');
+          } else {
+            el.classList.add('hidden');
+            btn.classList.remove('border-cyan-400', 'text-cyan-400');
+            btn.classList.add('border-transparent', 'text-slate-400');
+          }
+        }
+      });
+    }
+
+    function loadAdminData() {
+      // Products
+      const prods = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || '[]');
+      document.getElementById('stat-products-count').textContent = `${prods.length} منتجات`;
+
+      const grid = document.getElementById('products-grid-admin');
+      grid.innerHTML = prods.map(p => `
+        <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
+          <div class="flex items-center gap-3">
+            <img src="${p.image}" class="w-14 h-14 rounded-xl object-cover border border-slate-700">
+            <div>
+              <h4 class="font-bold text-white">${p.title}</h4>
+              <p class="text-xs text-slate-400">${p.subTitle}</p>
+              <div class="text-amber-400 font-black text-sm mt-1">${p.price} جنيه</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between border-t border-slate-800 pt-3 text-xs">
+            <span class="text-cyan-400 font-bold">${p.badge || 'نشط'}</span>
+            <button onclick="deleteProduct('${p.id}')" class="text-rose-400 hover:underline">حذف المنتج</button>
+          </div>
+        </div>
+      `).join('');
+
+      // Orders
+      const orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+      if (orders.length === 0) {
+        // Mock seed order if empty
+        orders.push({
+          id: 'ORD-982314',
+          date: '2026-09-01 02:45 م',
+          items: [{ title: 'GTA 5 Account', price: 120, quantity: 1 }],
+          total: 120,
+          status: 'مكتمل'
+        });
+      }
+      document.getElementById('stat-orders-count').textContent = `${orders.length} طلب`;
+
+      const totalRev = orders.reduce((sum, o) => sum + (o.status === 'مكتمل' ? o.total : 0), 0) + 45800;
+      document.getElementById('stat-revenue').textContent = `${totalRev.toLocaleString()} جنيه`;
+
+      const tbody = document.getElementById('orders-table-body');
+      tbody.innerHTML = orders.map(o => `
+        <tr class="hover:bg-slate-900/50 transition-colors">
+          <td class="p-4 font-black text-cyan-400">${o.id}</td>
+          <td class="p-4 text-slate-400">${o.date}</td>
+          <td class="p-4 font-bold text-white">${o.items.map(i => i.title + ' (x' + i.quantity + ')').join(', ')}</td>
+          <td class="p-4 font-black text-amber-400">${o.total} جنيه</td>
+          <td class="p-4">
+            <span class="px-2.5 py-1 rounded-md text-xs font-bold ${o.status === 'مكتمل' ? 'bg-emerald-950 text-emerald-400 border border-emerald-500/40' : 'bg-amber-950 text-amber-400 border border-amber-500/40'}">
+              ${o.status}
+            </span>
+          </td>
+          <td class="p-4 text-center space-x-2 space-x-reverse">
+            <button onclick="toggleOrderStatus('${o.id}')" class="text-xs text-cyan-400 hover:underline">تغيير الحالة</button>
+            <button onclick="deleteOrder('${o.id}')" class="text-xs text-rose-400 hover:underline">حذف</button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Settings
+      const settings = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{"phone":"201000000000","storeStatus":"active"}');
+      document.getElementById('setting-phone').value = settings.phone;
+      document.getElementById('setting-status').value = settings.storeStatus;
+    }
+
+    function handleCreateProduct(e) {
+      e.preventDefault();
+      const newProd = {
+        id: 'prod-' + Date.now(),
+        title: document.getElementById('prod-title').value,
+        subTitle: document.getElementById('prod-subtitle').value,
+        price: Number(document.getElementById('prod-price').value),
+        oldPrice: Number(document.getElementById('prod-oldprice').value) || null,
+        badge: document.getElementById('prod-badge').value || 'جديد ⚡',
+        category: document.getElementById('prod-category').value,
+        image: document.getElementById('prod-image').value || 'assets/gta5_cover.svg',
+        rating: '5.0 ★',
+        features: document.getElementById('prod-features').value.split(',').map(s => s.trim()).filter(Boolean)
+      };
+
+      const prods = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || '[]');
+      prods.unshift(newProd);
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(prods));
+
+      alert('⚡ تم إضافة المنتج بنجاح وتحديث المتجر فورياً!');
+      document.getElementById('add-product-form').reset();
+      loadAdminData();
+      switchTab('products-tab');
+    }
+
+    function deleteProduct(id) {
+      if (!confirm('هل أنت تأكد من حذف هذا المنتج؟')) return;
+      let prods = JSON.parse(localStorage.getItem(PRODUCTS_KEY) || '[]');
+      prods = prods.filter(p => p.id !== id);
+      localStorage.setItem(PRODUCTS_KEY, JSON.stringify(prods));
+      loadAdminData();
+    }
+
+    function toggleOrderStatus(id) {
+      let orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+      orders = orders.map(o => {
+        if (o.id === id) {
+          o.status = o.status === 'مكتمل' ? 'قيد الانتظار' : 'مكتمل';
+        }
+        return o;
+      });
+      localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+      loadAdminData();
+    }
+
+    function deleteOrder(id) {
+      let orders = JSON.parse(localStorage.getItem(ORDERS_KEY) || '[]');
+      orders = orders.filter(o => o.id !== id);
+      localStorage.setItem(ORDERS_KEY, JSON.stringify(orders));
+      loadAdminData();
+    }
+
+    function clearAllOrders() {
+      if (!confirm('هل أنت متأكد من مسح جميع الطلبات؟')) return;
+      localStorage.setItem(ORDERS_KEY, JSON.stringify([]));
+      loadAdminData();
+    }
+
+    function handleSaveSettings(e) {
+      e.preventDefault();
+      const settings = {
+        phone: document.getElementById('setting-phone').value,
+        storeStatus: document.getElementById('setting-status').value
+      };
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+      alert('💾 تم حفظ إعدادات المتجر والواتساب بنجاح!');
+    }
+
+    document.addEventListener('DOMContentLoaded', loadAdminData);
+  </script>
+</body>
+</html>
