@@ -3,352 +3,408 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KHALED ZONE — Admin Dashboard</title>
+  <title>KHALED ZONE — Admin</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-      theme: {
-        extend: {
-          fontFamily: { cairo: ['Cairo', 'system-ui', 'sans-serif'] },
-          colors: {
-            surface: { DEFAULT: '#0f172a', card: '#1e293b', border: '#334155', hover: '#243044' },
-            accent: { blue: '#38bdf8', glow: 'rgba(56,189,248,0.2)' }
-          },
-          boxShadow: {
-            card: '0 1px 3px 0 rgba(0,0,0,0.4), 0 1px 2px 0 rgba(0,0,0,0.3)',
-            glow: '0 0 20px rgba(56,189,248,0.15)'
-          }
-        }
-      }
-    }
-  </script>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    * { font-family: 'Cairo', system-ui, sans-serif; }
-    body { background: #0b1120; }
-    .sidebar-link { @apply flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all duration-200 cursor-pointer; }
-    .sidebar-link.active { @apply text-white bg-slate-800/80 shadow-sm; border-right: 3px solid #38bdf8; }
-    .kpi-card { background: #1e293b; border: 1px solid #2d3f55; border-radius: 16px; padding: 24px; position: relative; overflow: hidden; transition: box-shadow 0.2s; }
-    .kpi-card:hover { box-shadow: 0 0 0 1px rgba(56,189,248,0.3), 0 4px 24px rgba(0,0,0,0.4); }
-    .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: var(--kpi-color, #38bdf8); }
-    .section { display: none; }
-    .section.active { display: block; }
-    .badge { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 6px; }
-    .table-row { transition: background 0.15s; }
-    .table-row:hover { background: rgba(56,189,248,0.04); }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0b1120; }
-    ::-webkit-scrollbar-thumb { background: #2d3f55; border-radius: 4px; }
+    *, *::before, *::after { box-sizing: border-box; font-family: 'Cairo', system-ui, sans-serif; }
+    html { background: #060d1a; }
+    body { background: #060d1a; color: #f1f5f9; direction: rtl; }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
-    .toast { position: fixed; bottom: 24px; left: 24px; background: #1e293b; border: 1px solid #38bdf8; color: white; padding: 14px 20px; border-radius: 14px; font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 10px; z-index: 9999; box-shadow: 0 0 24px rgba(56,189,248,0.3); transform: translateY(80px); opacity: 0; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-    .toast.show { transform: translateY(0); opacity: 1; }
-    .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 50; display: flex; align-items: center; justify-content: center; }
-    input, select, textarea { background: #0f172a !important; border: 1px solid #334155 !important; color: #f1f5f9 !important; border-radius: 10px; padding: 10px 14px; width: 100%; transition: border-color 0.2s; outline: none; font-size: 14px; }
-    input:focus, select:focus, textarea:focus { border-color: #38bdf8 !important; box-shadow: 0 0 0 3px rgba(56,189,248,0.1) !important; }
-    input::placeholder, textarea::placeholder { color: #64748b; }
-    .sparkline { height: 48px; }
+
+    /* ── Sidebar ── */
+    .sidebar { width: 240px; min-height: 100vh; background: #080f1e; border-left: 1px solid rgba(255,255,255,0.05); flex-shrink: 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 11px 16px; border-radius: 12px; font-size: 13.5px; font-weight: 700;
+      color: #64748b; cursor: pointer; transition: all 0.2s ease; position: relative; user-select: none;
+    }
+    .nav-item:hover { color: #94a3b8; background: rgba(255,255,255,0.04); }
+    .nav-item.active { color: #38bdf8; background: rgba(56,189,248,0.08); }
+    .nav-item.active::before { content: ''; position: absolute; left: 0; top: 50%; transform: translateY(-50%); width: 3px; height: 60%; background: #38bdf8; border-radius: 0 3px 3px 0; }
+
+    /* ── KPI Card ── */
+    .kpi { background: #0f1e35; border: 1px solid #1a3050; border-radius: 18px; padding: 22px 24px; position: relative; overflow: hidden; transition: all 0.25s; }
+    .kpi:hover { border-color: #234568; box-shadow: 0 8px 32px rgba(0,0,0,0.4); }
+    .kpi-top-bar { position: absolute; top: 0; left: 0; right: 0; height: 2px; border-radius: 18px 18px 0 0; }
+
+    /* ── Glass panel ── */
+    .panel { background: #0f1e35; border: 1px solid #1a3050; border-radius: 18px; }
+    .panel-header { padding: 20px 24px; border-bottom: 1px solid #1a3050; }
+    .panel-body { padding: 24px; }
+
+    /* ── Table ── */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { padding: 12px 16px; text-align: right; font-size: 11px; font-weight: 700; color: #475569; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid #1a3050; }
+    .data-table td { padding: 14px 16px; font-size: 13.5px; border-bottom: 1px solid rgba(26,48,80,0.5); }
+    .data-table tbody tr { transition: background 0.15s; }
+    .data-table tbody tr:hover { background: rgba(56,189,248,0.03); }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+
+    /* ── Badge ── */
+    .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 8px; }
+    .badge-green { background: rgba(16,185,129,0.1); color: #34d399; border: 1px solid rgba(16,185,129,0.2); }
+    .badge-amber { background: rgba(245,158,11,0.1); color: #fbbf24; border: 1px solid rgba(245,158,11,0.2); }
+    .badge-red { background: rgba(239,68,68,0.1); color: #f87171; border: 1px solid rgba(239,68,68,0.2); }
+    .badge-blue { background: rgba(56,189,248,0.1); color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
+    .badge-purple { background: rgba(167,139,250,0.1); color: #a78bfa; border: 1px solid rgba(167,139,250,0.2); }
+
+    /* ── Buttons ── */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; font-weight: 700; border-radius: 12px; transition: all 0.2s ease; cursor: pointer; font-size: 13px; }
+    .btn-primary { background: linear-gradient(135deg, #0ea5e9, #0369a1); color: white; padding: 10px 20px; box-shadow: 0 4px 14px rgba(14,165,233,0.35); }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(14,165,233,0.5); }
+    .btn-ghost { background: rgba(255,255,255,0.04); border: 1px solid #1a3050; color: #64748b; padding: 9px 18px; }
+    .btn-ghost:hover { border-color: #234568; color: #94a3b8; }
+    .btn-danger { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #f87171; padding: 8px 14px; font-size: 12px; }
+    .btn-danger:hover { background: rgba(239,68,68,0.15); }
+    .btn-sm { padding: 7px 14px; font-size: 12px; border-radius: 9px; }
+    .btn-success { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 10px 20px; box-shadow: 0 4px 14px rgba(16,185,129,0.3); }
+    .btn-success:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(16,185,129,0.45); }
+
+    /* ── Form ── */
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 12px; font-weight: 700; color: #64748b; letter-spacing: 0.04em; }
+    .form-input { background: #060d1a; border: 1px solid #1a3050; border-radius: 11px; padding: 11px 14px; color: #f1f5f9; font-size: 13.5px; outline: none; transition: border-color 0.2s, box-shadow 0.2s; width: 100%; }
+    .form-input:focus { border-color: #38bdf8; box-shadow: 0 0 0 3px rgba(56,189,248,0.08); }
+    .form-input::placeholder { color: #334155; }
+
+    /* ── Sections ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    /* ── Toast ── */
+    #toast { position: fixed; bottom: 24px; left: 24px; z-index: 999; background: #0f1e35; border: 1px solid #234568; border-radius: 14px; padding: 14px 20px; display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 700; box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(56,189,248,0.1); transform: translateY(80px); opacity: 0; transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    #toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── Stat mini bar ── */
+    .mini-bar { height: 4px; border-radius: 4px; background: #1a3050; overflow: hidden; margin-top: 8px; }
+    .mini-bar-fill { height: 100%; border-radius: 4px; transition: width 1s ease; }
+
+    /* ── Progress ring (placeholder) ── */
+    .ring-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+
+    /* ── Product card admin ── */
+    .prod-admin-card { background: #0f1e35; border: 1px solid #1a3050; border-radius: 16px; padding: 18px; display: flex; flex-direction: column; gap: 14px; transition: all 0.2s; }
+    .prod-admin-card:hover { border-color: #234568; box-shadow: 0 4px 24px rgba(0,0,0,0.3); }
+
+    /* ── Divider ── */
+    .divider { border: none; border-top: 1px solid #1a3050; margin: 0; }
+
+    /* ── Top bar ── */
+    .topbar { position: sticky; top: 0; z-index: 30; background: rgba(6,13,26,0.8); backdrop-filter: blur(20px); border-bottom: 1px solid rgba(255,255,255,0.05); padding: 14px 32px; display: flex; align-items: center; justify-content: space-between; }
+
+    /* ── Shimmer loader ── */
+    @keyframes shimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+    .shimmer { background: linear-gradient(90deg, #1a3050 25%, #234568 50%, #1a3050 75%); background-size: 200% 100%; animation: shimmer 1.4s infinite; }
   </style>
 </head>
-<body class="bg-[#0b1120] text-slate-100 min-h-screen">
+<body>
 
-<!-- LAYOUT -->
-<div class="flex min-h-screen">
+<div style="display:flex;min-height:100vh">
 
-  <!-- SIDEBAR -->
-  <aside class="w-64 flex-shrink-0 border-r border-slate-800/60 bg-[#0d1527] flex flex-col">
-    <!-- Logo -->
-    <div class="px-6 py-6 border-b border-slate-800/60">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-blue-600 flex items-center justify-center text-lg font-black text-white shadow-lg shadow-cyan-500/20">K</div>
+  <!-- ══ SIDEBAR ══ -->
+  <aside class="sidebar flex flex-col">
+    <!-- Brand -->
+    <div style="padding:20px 20px 16px;border-bottom:1px solid rgba(255,255,255,0.05)">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#38bdf8,#0369a1);display:flex;align-items:center;justify-content:center;font-size:18px;box-shadow:0 4px 12px rgba(56,189,248,0.25)">👑</div>
         <div>
-          <div class="font-black text-base text-white tracking-wide">KHALED <span class="text-cyan-400">ZONE</span></div>
-          <div class="text-[10px] text-slate-500 font-semibold tracking-wider">ADMIN CONSOLE</div>
+          <div style="font-weight:900;font-size:14px;color:white;letter-spacing:0.05em">KHALED <span style="color:#38bdf8">ZONE</span></div>
+          <div style="font-size:9px;color:#334155;font-weight:700;letter-spacing:0.12em;text-transform:uppercase">Admin Console</div>
         </div>
       </div>
     </div>
 
-    <!-- Nav Links -->
-    <nav class="flex-1 p-4 space-y-1">
-      <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest px-4 mb-3">القائمة الرئيسية</p>
-      <div class="sidebar-link active" onclick="navigate('overview')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 5a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1V5zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1V5zM4 15a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1H5a1 1 0 01-1-1v-4zm10 0a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"/></svg>
+    <!-- Nav -->
+    <nav style="padding:16px 12px;flex:1;display:flex;flex-direction:column;gap:3px">
+      <div style="font-size:9px;color:#1e3a5f;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:8px 4px 6px">MAIN</div>
+
+      <div class="nav-item active" onclick="navigate('overview')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
         <span>نظرة عامة</span>
       </div>
-      <div class="sidebar-link" onclick="navigate('orders')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+      <div class="nav-item" onclick="navigate('orders')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
         <span>الطلبات</span>
-        <span class="mr-auto badge bg-cyan-950 text-cyan-400 border border-cyan-800" id="nav-orders-count">0</span>
+        <span id="snav-orders" style="margin-right:auto;background:rgba(56,189,248,0.1);color:#38bdf8;border:1px solid rgba(56,189,248,0.2);border-radius:6px;font-size:10px;font-weight:900;padding:1px 7px">0</span>
       </div>
-      <div class="sidebar-link" onclick="navigate('products')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
+      <div class="nav-item" onclick="navigate('products')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
         <span>المنتجات</span>
-        <span class="mr-auto badge bg-slate-800 text-slate-400" id="nav-products-count">0</span>
+        <span id="snav-products" style="margin-right:auto;background:#1a3050;color:#475569;border-radius:6px;font-size:10px;font-weight:900;padding:1px 7px">0</span>
       </div>
 
-      <p class="text-[10px] text-slate-600 font-bold uppercase tracking-widest px-4 mb-3 pt-4">الإدارة</p>
-      <div class="sidebar-link" onclick="navigate('add-product')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+      <div style="font-size:9px;color:#1e3a5f;font-weight:900;letter-spacing:0.12em;text-transform:uppercase;padding:14px 4px 6px">MANAGE</div>
+
+      <div class="nav-item" onclick="navigate('add-product')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
         <span>إضافة منتج</span>
       </div>
-      <div class="sidebar-link" onclick="navigate('settings')">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+      <div class="nav-item" onclick="navigate('settings')">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
         <span>الإعدادات</span>
       </div>
     </nav>
 
-    <!-- Footer -->
-    <div class="p-4 border-t border-slate-800/60 space-y-3">
-      <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold text-slate-400 hover:text-white hover:bg-slate-800/60 transition-all">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-        <span>المتجر الرئيسي</span>
+    <!-- Bottom -->
+    <div style="padding:12px;border-top:1px solid rgba(255,255,255,0.05)">
+      <a href="/" class="nav-item" style="text-decoration:none">
+        <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <span style="color:#64748b">المتجر</span>
       </a>
     </div>
   </aside>
 
-  <!-- MAIN CONTENT -->
-  <main class="flex-1 overflow-y-auto">
+  <!-- ══ CONTENT ══ -->
+  <main style="flex:1;overflow-y:auto;display:flex;flex-direction:column">
 
-    <!-- TOP BAR -->
-    <div class="sticky top-0 z-30 bg-[#0b1120]/80 backdrop-blur-xl border-b border-slate-800/60 px-8 h-16 flex items-center justify-between">
-      <div id="page-title" class="font-black text-lg text-white">نظرة عامة</div>
-      <div class="flex items-center gap-3">
-        <div class="flex items-center gap-2 text-xs font-semibold">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span class="text-emerald-400">المتجر يعمل</span>
+    <!-- Top bar -->
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div id="page-breadcrumb" style="font-size:13px;color:#475569;font-weight:600">Admin</div>
+        <svg width="14" height="14" fill="none" stroke="#334155" viewBox="0 0 24 24" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+        <div id="page-title" style="font-size:14px;font-weight:900;color:white">نظرة عامة</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px">
+        <div style="display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.15);font-size:11.5px;font-weight:700;color:#34d399">
+          <span style="width:6px;height:6px;border-radius:50%;background:#34d399;display:inline-block;animation:pulse 2s infinite"></span>
+          المتجر يعمل
         </div>
-        <div class="text-xs text-slate-500 font-semibold" id="live-time"></div>
-        <button onclick="navigate('add-product')" class="flex items-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/20 transition-all hover:scale-105">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-          <span>منتج جديد</span>
+        <div id="live-clock" style="font-size:12px;color:#334155;font-weight:700;font-variant-numeric:tabular-nums"></div>
+        <button onclick="navigate('add-product')" class="btn btn-primary btn-sm">
+          <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+          منتج جديد
         </button>
       </div>
     </div>
 
-    <div class="px-8 py-8 space-y-8">
+    <div style="flex:1;padding:28px 32px;overflow-y:auto">
 
-      <!-- ==================== SECTION: OVERVIEW ==================== -->
-      <div id="section-overview" class="section active space-y-8">
+      <!-- ══════════ PAGE: OVERVIEW ══════════ -->
+      <div id="page-overview" class="page active" style="display:flex;flex-direction:column;gap:24px">
 
-        <!-- KPI CARDS -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
-          <div class="kpi-card" style="--kpi-color:#34d399">
-            <div class="flex items-start justify-between mb-4">
-              <div class="space-y-1">
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">إجمالي الإيرادات</p>
-                <p class="text-2xl font-black text-white" id="kpi-revenue">0 جنيه</p>
-              </div>
-              <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 text-xs">
-              <span class="badge bg-emerald-900/50 text-emerald-400">+18.4%</span>
-              <span class="text-slate-500">مقارنة بالأسبوع الماضي</span>
-            </div>
-          </div>
+        <!-- KPI row -->
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px">
 
-          <div class="kpi-card" style="--kpi-color:#38bdf8">
-            <div class="flex items-start justify-between mb-4">
-              <div class="space-y-1">
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">إجمالي الطلبات</p>
-                <p class="text-2xl font-black text-white" id="kpi-orders">0</p>
-              </div>
-              <div class="w-10 h-10 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 text-xs">
-              <span class="badge bg-cyan-900/50 text-cyan-400">+7 اليوم</span>
-              <span class="text-slate-500">طلب جديد</span>
-            </div>
-          </div>
-
-          <div class="kpi-card" style="--kpi-color:#a78bfa">
-            <div class="flex items-start justify-between mb-4">
-              <div class="space-y-1">
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">المنتجات المتاحة</p>
-                <p class="text-2xl font-black text-white" id="kpi-products">0</p>
-              </div>
-              <div class="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 text-xs">
-              <span class="badge bg-violet-900/50 text-violet-400">نشط</span>
-              <span class="text-slate-500">حسابات وألعاب</span>
-            </div>
-          </div>
-
-          <div class="kpi-card" style="--kpi-color:#fb923c">
-            <div class="flex items-start justify-between mb-4">
-              <div class="space-y-1">
-                <p class="text-xs font-bold text-slate-500 uppercase tracking-wider">نسبة التسليم</p>
-                <p class="text-2xl font-black text-white">99.4%</p>
-              </div>
-              <div class="w-10 h-10 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center">
-                <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/></svg>
-              </div>
-            </div>
-            <div class="flex items-center gap-2 text-xs">
-              <span class="badge bg-orange-900/50 text-orange-400">ممتاز</span>
-              <span class="text-slate-500">من 1,250 طلب مؤكد</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- CHARTS ROW -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Revenue Chart -->
-          <div class="lg:col-span-2 kpi-card" style="--kpi-color:#38bdf8">
-            <div class="flex items-center justify-between mb-6">
+          <div class="kpi">
+            <div class="kpi-top-bar" style="background:linear-gradient(90deg,#34d399,#059669)"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
               <div>
-                <h3 class="font-black text-base text-white">أداء المبيعات الأسبوعية</h3>
-                <p class="text-xs text-slate-500 mt-0.5">الإيرادات اليومية خلال آخر 7 أيام</p>
+                <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">إجمالي الإيرادات</div>
+                <div style="font-size:26px;font-weight:900;color:white;line-height:1" id="kpi-rev">0</div>
+                <div style="font-size:11px;color:#475569;margin-top:3px">جنيه مصري</div>
               </div>
-              <div class="text-right">
-                <div class="font-black text-xl text-emerald-400" id="chart-total">0 جنيه</div>
-                <div class="text-[11px] text-slate-500">إجمالي الأسبوع</div>
+              <div style="width:40px;height:40px;border-radius:12px;background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" fill="none" stroke="#34d399" viewBox="0 0 24 24" stroke-width="2"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
               </div>
             </div>
-            <canvas id="revenueChart" height="120"></canvas>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge badge-green" style="font-size:10px">+18.4%</span>
+              <span style="font-size:11px;color:#334155">عن الأسبوع الماضي</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:73%;background:linear-gradient(90deg,#34d399,#059669)"></div></div>
           </div>
 
-          <!-- Products Breakdown -->
-          <div class="kpi-card" style="--kpi-color:#a78bfa">
-            <h3 class="font-black text-base text-white mb-1">توزيع المبيعات</h3>
-            <p class="text-xs text-slate-500 mb-6">أداء كل منتج بشكل فردي</p>
-            <canvas id="productChart" height="190"></canvas>
+          <div class="kpi">
+            <div class="kpi-top-bar" style="background:linear-gradient(90deg,#38bdf8,#0369a1)"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">إجمالي الطلبات</div>
+                <div style="font-size:26px;font-weight:900;color:white;line-height:1" id="kpi-orders">0</div>
+                <div style="font-size:11px;color:#475569;margin-top:3px">طلب مسجل</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:12px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" fill="none" stroke="#38bdf8" viewBox="0 0 24 24" stroke-width="2"><path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge badge-blue" style="font-size:10px">+7 اليوم</span>
+              <span style="font-size:11px;color:#334155">طلب جديد</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:58%;background:linear-gradient(90deg,#38bdf8,#0369a1)"></div></div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-top-bar" style="background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">المنتجات النشطة</div>
+                <div style="font-size:26px;font-weight:900;color:white;line-height:1" id="kpi-prods">0</div>
+                <div style="font-size:11px;color:#475569;margin-top:3px">منتج متاح</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:12px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" fill="none" stroke="#a78bfa" viewBox="0 0 24 24" stroke-width="2"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10"/></svg>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge badge-purple" style="font-size:10px">نشط</span>
+              <span style="font-size:11px;color:#334155">للبيع الفوري</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:45%;background:linear-gradient(90deg,#a78bfa,#7c3aed)"></div></div>
+          </div>
+
+          <div class="kpi">
+            <div class="kpi-top-bar" style="background:linear-gradient(90deg,#fb923c,#ea580c)"></div>
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+              <div>
+                <div style="font-size:11px;font-weight:700;color:#475569;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px">نسبة التسليم</div>
+                <div style="font-size:26px;font-weight:900;color:white;line-height:1">99.4%</div>
+                <div style="font-size:11px;color:#475569;margin-top:3px">من 1,250 طلب</div>
+              </div>
+              <div style="width:40px;height:40px;border-radius:12px;background:rgba(251,146,60,0.1);border:1px solid rgba(251,146,60,0.2);display:flex;align-items:center;justify-content:center">
+                <svg width="18" height="18" fill="none" stroke="#fb923c" viewBox="0 0 24 24" stroke-width="2"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span class="badge badge-amber" style="font-size:10px">ممتاز</span>
+              <span style="font-size:11px;color:#334155">معدل الرضا</span>
+            </div>
+            <div class="mini-bar"><div class="mini-bar-fill" style="width:99%;background:linear-gradient(90deg,#fb923c,#ea580c)"></div></div>
           </div>
         </div>
 
-        <!-- Recent Orders -->
-        <div class="kpi-card" style="--kpi-color:#38bdf8">
-          <div class="flex items-center justify-between mb-6">
-            <div>
-              <h3 class="font-black text-base text-white">آخر الطلبات الواردة</h3>
-              <p class="text-xs text-slate-500 mt-0.5">أحدث 5 طلبات من العملاء</p>
+        <!-- Charts row -->
+        <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+          <div class="panel">
+            <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between">
+              <div>
+                <div style="font-size:15px;font-weight:900;color:white">أداء المبيعات</div>
+                <div style="font-size:12px;color:#475569;margin-top:2px">الإيرادات اليومية خلال آخر 7 أيام</div>
+              </div>
+              <div style="text-align:left">
+                <div style="font-size:20px;font-weight:900;color:#34d399" id="week-total">0 جنيه</div>
+                <div style="font-size:10px;color:#334155;margin-top:1px">إجمالي الأسبوع</div>
+              </div>
             </div>
-            <button onclick="navigate('orders')" class="text-xs text-cyan-400 hover:text-cyan-300 font-bold flex items-center gap-1">
-              عرض الكل
-              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-            </button>
+            <div class="panel-body"><canvas id="chart-revenue" height="100"></canvas></div>
           </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-right text-sm">
+          <div class="panel">
+            <div class="panel-header">
+              <div style="font-size:15px;font-weight:900;color:white">توزيع المنتجات</div>
+              <div style="font-size:12px;color:#475569;margin-top:2px">نسبة مبيعات كل منتج</div>
+            </div>
+            <div class="panel-body"><canvas id="chart-products" height="180"></canvas></div>
+          </div>
+        </div>
+
+        <!-- Recent orders -->
+        <div class="panel">
+          <div class="panel-header" style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-size:15px;font-weight:900;color:white">آخر الطلبات</div>
+              <div style="font-size:12px;color:#475569;margin-top:2px">أحدث 5 طلبات مسجلة</div>
+            </div>
+            <button onclick="navigate('orders')" class="btn btn-ghost btn-sm">عرض الكل</button>
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
               <thead>
-                <tr class="border-b border-slate-800">
-                  <th class="pb-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">رقم الطلب</th>
-                  <th class="pb-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">المنتجات</th>
-                  <th class="pb-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">المبلغ</th>
-                  <th class="pb-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">الحالة</th>
-                  <th class="pb-3 text-[11px] font-bold text-slate-500 uppercase tracking-wider">التاريخ</th>
+                <tr>
+                  <th>رقم الطلب</th><th>المنتجات</th><th>المبلغ</th><th>الحالة</th><th>التاريخ</th>
                 </tr>
               </thead>
-              <tbody id="recent-orders-body" class="divide-y divide-slate-800/60"></tbody>
+              <tbody id="recent-orders"></tbody>
             </table>
           </div>
         </div>
-
       </div>
 
-      <!-- ==================== SECTION: ORDERS ==================== -->
-      <div id="section-orders" class="section space-y-6">
-        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <!-- ══════════ PAGE: ORDERS ══════════ -->
+      <div id="page-orders" class="page" style="display:none;flex-direction:column;gap:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
           <div>
-            <h2 class="font-black text-xl text-white">إدارة الطلبات</h2>
-            <p class="text-sm text-slate-500 mt-0.5">عرض وإدارة جميع الطلبات الواردة من العملاء</p>
+            <div style="font-size:20px;font-weight:900;color:white">إدارة الطلبات</div>
+            <div style="font-size:13px;color:#475569;margin-top:3px">عرض وإدارة جميع الطلبات الواردة</div>
           </div>
-          <div class="flex items-center gap-3">
-            <div class="relative">
-              <input type="text" id="order-search" placeholder="بحث برقم الطلب..." oninput="renderOrders()" style="padding-right:36px">
-              <svg class="w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div style="position:relative">
+              <input id="order-q" class="form-input" style="padding-right:36px;width:200px" placeholder="بحث..." oninput="renderOrders()">
+              <svg width="15" height="15" fill="none" stroke="#334155" viewBox="0 0 24 24" stroke-width="2" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);pointer-events:none"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
-            <select id="order-status-filter" onchange="renderOrders()" style="width:140px">
+            <select id="order-filter" class="form-input" style="width:150px" onchange="renderOrders()">
               <option value="">كل الحالات</option>
               <option value="مكتمل">مكتمل</option>
               <option value="قيد الانتظار">قيد الانتظار</option>
             </select>
-            <button onclick="clearAllOrders()" class="px-4 py-2.5 rounded-xl bg-rose-900/30 border border-rose-700/40 text-rose-400 hover:bg-rose-900/60 text-xs font-bold transition-all">
-              مسح الكل
+            <button onclick="clearAllOrders()" class="btn btn-danger">مسح الكل</button>
+          </div>
+        </div>
+
+        <div class="panel" style="overflow:hidden">
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>رقم الطلب</th><th>التاريخ</th><th>المنتجات</th><th>المبلغ</th><th>الحالة</th><th style="text-align:center">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody id="orders-body"></tbody>
+            </table>
+          </div>
+          <div id="orders-empty" style="display:none;text-align:center;padding:60px 24px">
+            <div style="font-size:48px;margin-bottom:12px">📋</div>
+            <div style="font-weight:700;color:#475569">لا توجد طلبات</div>
+            <div style="font-size:12px;color:#334155;margin-top:6px">ستظهر هنا طلبات العملاء عند بدء الشراء</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════ PAGE: PRODUCTS ══════════ -->
+      <div id="page-products" class="page" style="display:none;flex-direction:column;gap:20px">
+        <div style="display:flex;align-items:center;justify-content:space-between">
+          <div>
+            <div style="font-size:20px;font-weight:900;color:white">المنتجات والمخزون</div>
+            <div style="font-size:13px;color:#475569;margin-top:3px">الحسابات والخدمات المعروضة في المتجر</div>
+          </div>
+          <div style="display:flex;gap:10px">
+            <button onclick="resetProducts()" class="btn btn-ghost">إعادة ضبط الافتراضي</button>
+            <button onclick="navigate('add-product')" class="btn btn-primary">
+              <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M12 4v16m8-8H4"/></svg>
+              إضافة منتج
             </button>
           </div>
         </div>
-
-        <div class="kpi-card p-0 overflow-hidden" style="--kpi-color:#38bdf8">
-          <div class="overflow-x-auto">
-            <table class="w-full text-right text-sm">
-              <thead class="bg-slate-900/60 border-b border-slate-800">
-                <tr>
-                  <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">رقم الطلب</th>
-                  <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">التاريخ والوقت</th>
-                  <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">المنتجات</th>
-                  <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">المبلغ</th>
-                  <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider">الحالة</th>
-                  <th class="px-6 py-4 text-[11px] font-bold text-slate-500 uppercase tracking-wider text-center">إجراءات</th>
-                </tr>
-              </thead>
-              <tbody id="orders-main-body" class="divide-y divide-slate-800/40"></tbody>
-            </table>
-          </div>
-          <div id="orders-empty" class="hidden py-20 text-center space-y-3">
-            <div class="text-5xl">📋</div>
-            <p class="text-slate-500 font-semibold">لا توجد طلبات بعد</p>
-            <p class="text-xs text-slate-600">ستظهر هنا طلبات العملاء عند بدء الشراء</p>
-          </div>
-        </div>
+        <div id="products-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px"></div>
       </div>
 
-      <!-- ==================== SECTION: PRODUCTS ==================== -->
-      <div id="section-products" class="section space-y-6">
-        <div class="flex items-center justify-between">
-          <div>
-            <h2 class="font-black text-xl text-white">المنتجات والمخزون</h2>
-            <p class="text-sm text-slate-500 mt-0.5">جميع الحسابات والخدمات المعروضة في المتجر</p>
-          </div>
-          <button onclick="navigate('add-product')" class="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/20 transition-all hover:scale-105">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/></svg>
-            <span>إضافة منتج</span>
-          </button>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5" id="products-grid"></div>
-      </div>
-
-      <!-- ==================== SECTION: ADD PRODUCT ==================== -->
-      <div id="section-add-product" class="section">
-        <div class="max-w-2xl">
-          <div class="mb-8">
-            <h2 class="font-black text-xl text-white">إضافة منتج جديد للمتجر</h2>
-            <p class="text-sm text-slate-500 mt-0.5">أدخل تفاصيل الحساب أو الخدمة وسيظهر في المتجر فوراً</p>
+      <!-- ══════════ PAGE: ADD PRODUCT ══════════ -->
+      <div id="page-add-product" class="page" style="display:none">
+        <div style="max-width:680px">
+          <div style="margin-bottom:24px">
+            <div style="font-size:20px;font-weight:900;color:white">إضافة منتج جديد</div>
+            <div style="font-size:13px;color:#475569;margin-top:3px">أدخل تفاصيل الحساب أو الخدمة — سيظهر في المتجر فوراً</div>
           </div>
 
-          <form id="product-form" onsubmit="handleCreateProduct(event)" class="kpi-card space-y-5" style="--kpi-color:#38bdf8">
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">اسم المنتج / اللعبة *</label>
-                <input type="text" id="f-title" required placeholder="GTA 5 Premium Account">
+          <form id="product-form" onsubmit="handleCreate(event)" class="panel panel-body" style="display:flex;flex-direction:column;gap:20px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+              <div class="form-group">
+                <label class="form-label">اسم المنتج *</label>
+                <input class="form-input" id="f-title" required placeholder="GTA 5 Premium Account">
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">الوصف المختصر *</label>
-                <input type="text" id="f-subtitle" required placeholder="حساب كامل الملكية + GTA Online">
+              <div class="form-group">
+                <label class="form-label">الوصف المختصر *</label>
+                <input class="form-input" id="f-sub" required placeholder="حساب كامل الملكية + GTA Online">
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">السعر (جنيه) *</label>
-                <input type="number" id="f-price" required placeholder="130">
+              <div class="form-group">
+                <label class="form-label">السعر الحالي (جنيه) *</label>
+                <input class="form-input" id="f-price" type="number" required placeholder="120">
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">السعر الأصلي (قبل الخصم)</label>
-                <input type="number" id="f-oldprice" placeholder="180">
+              <div class="form-group">
+                <label class="form-label">السعر قبل الخصم</label>
+                <input class="form-input" id="f-old" type="number" placeholder="160">
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">الشارة Badge</label>
-                <input type="text" id="f-badge" placeholder="الأكثر مبيعاً 🔥">
+              <div class="form-group">
+                <label class="form-label">الشارة Badge</label>
+                <input class="form-input" id="f-badge" placeholder="الأكثر مبيعاً 🔥">
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">التصنيف</label>
-                <select id="f-category">
+              <div class="form-group">
+                <label class="form-label">التصنيف</label>
+                <select class="form-input" id="f-cat">
                   <option value="accounts">حسابات ألعاب</option>
                   <option value="fivem">FiveM & Roleplay</option>
                   <option value="services">خدمات رقمية</option>
@@ -356,88 +412,82 @@
               </div>
             </div>
 
-            <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-400">رابط صورة الغلاف</label>
-              <input type="text" id="f-image" value="assets/gta5_cover.svg" placeholder="assets/gta5_cover.svg">
+            <div class="form-group">
+              <label class="form-label">رابط صورة الغلاف</label>
+              <input class="form-input" id="f-img" value="assets/gta5_cover.svg" placeholder="assets/...">
             </div>
 
-            <div class="space-y-1.5">
-              <label class="text-xs font-bold text-slate-400">مميزات الحساب (ميزة لكل سطر)</label>
-              <textarea id="f-features" rows="4" placeholder="تفعيل فوري ⚡&#10;ضمان مدى الحياة 🛡️&#10;حساب كامل الملكية 👑"></textarea>
+            <div class="form-group">
+              <label class="form-label">مميزات الحساب (ميزة لكل سطر)</label>
+              <textarea class="form-input" id="f-feat" rows="4" placeholder="تفعيل فوري ⚡&#10;ضمان مدى الحياة 🛡️&#10;تغيير جميع البيانات 🔑" style="resize:vertical"></textarea>
             </div>
 
-            <div class="flex items-center gap-4 pt-2">
-              <button type="submit" class="flex-1 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold shadow-lg shadow-cyan-500/20 transition-all">
-                إضافة للمتجر فوراً 🚀
-              </button>
-              <button type="button" onclick="document.getElementById('product-form').reset()" class="px-6 py-3.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-400 hover:text-white font-bold text-sm transition-all">
-                مسح
-              </button>
+            <div style="display:flex;gap:10px">
+              <button type="submit" class="btn btn-primary" style="flex:1;padding:12px">حفظ وإضافة للمتجر فوراً 🚀</button>
+              <button type="button" onclick="document.getElementById('product-form').reset()" class="btn btn-ghost">مسح</button>
             </div>
           </form>
         </div>
       </div>
 
-      <!-- ==================== SECTION: SETTINGS ==================== -->
-      <div id="section-settings" class="section">
-        <div class="max-w-2xl">
-          <div class="mb-8">
-            <h2 class="font-black text-xl text-white">إعدادات المتجر</h2>
-            <p class="text-sm text-slate-500 mt-0.5">تحكم في إعدادات الاستلام والدفع والعرض</p>
+      <!-- ══════════ PAGE: SETTINGS ══════════ -->
+      <div id="page-settings" class="page" style="display:none">
+        <div style="max-width:600px;display:flex;flex-direction:column;gap:20px">
+          <div>
+            <div style="font-size:20px;font-weight:900;color:white">إعدادات المتجر</div>
+            <div style="font-size:13px;color:#475569;margin-top:3px">إدارة رقم الواتساب وإعدادات التشغيل</div>
           </div>
 
-          <form onsubmit="handleSaveSettings(event)" class="space-y-6">
-            <div class="kpi-card space-y-5" style="--kpi-color:#34d399">
-              <div class="flex items-center gap-3 mb-2">
-                <div class="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <svg class="w-4 h-4 text-emerald-400" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654z"/></svg>
-                </div>
-                <h3 class="font-black text-base text-white">إعدادات واتساب الطلبات</h3>
+          <!-- WhatsApp card -->
+          <div class="panel">
+            <div class="panel-header" style="display:flex;align-items:center;gap:10px">
+              <div style="width:34px;height:34px;border-radius:10px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);display:flex;align-items:center;justify-content:center">
+                <svg width="16" height="16" fill="#34d399" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448L.057 24z"/></svg>
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">رقم الواتساب (مع كود الدولة)</label>
-                <input type="text" id="s-phone" placeholder="201000000000">
-                <p class="text-[11px] text-slate-600">مثال: 201000000000 — ستُوجَّه طلبات العملاء لهذا الرقم تلقائياً</p>
+              <div style="font-size:14px;font-weight:900;color:white">إعدادات WhatsApp</div>
+            </div>
+            <div class="panel-body" style="display:flex;flex-direction:column;gap:14px">
+              <div class="form-group">
+                <label class="form-label">رقم الواتساب لاستلام الطلبات</label>
+                <input class="form-input" id="s-phone" placeholder="201000000000">
+                <div style="font-size:11px;color:#334155;margin-top:4px">ستُحوَّل جميع طلبات الشراء لهذا الرقم تلقائياً</div>
               </div>
             </div>
+          </div>
 
-            <div class="kpi-card space-y-5" style="--kpi-color:#38bdf8">
-              <div class="flex items-center gap-3 mb-2">
-                <div class="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-                  <svg class="w-4 h-4 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                </div>
-                <h3 class="font-black text-base text-white">حالة المتجر</h3>
+          <!-- Status card -->
+          <div class="panel">
+            <div class="panel-header" style="display:flex;align-items:center;gap:10px">
+              <div style="width:34px;height:34px;border-radius:10px;background:rgba(56,189,248,0.1);border:1px solid rgba(56,189,248,0.2);display:flex;align-items:center;justify-content:center">
+                <svg width="16" height="16" fill="none" stroke="#38bdf8" viewBox="0 0 24 24" stroke-width="2"><path d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
               </div>
-              <div class="space-y-1.5">
-                <label class="text-xs font-bold text-slate-400">وضع التشغيل الحالي</label>
-                <select id="s-status">
-                  <option value="active">متصل ويعمل بانتظام 🟢</option>
-                  <option value="maintenance">وضع الصيانة المؤقت 🔴</option>
+              <div style="font-size:14px;font-weight:900;color:white">حالة المتجر</div>
+            </div>
+            <div class="panel-body" style="display:flex;flex-direction:column;gap:14px">
+              <div class="form-group">
+                <label class="form-label">وضع التشغيل</label>
+                <select class="form-input" id="s-status">
+                  <option value="active">متصل ويعمل 🟢</option>
+                  <option value="maintenance">صيانة مؤقتة 🔴</option>
                 </select>
               </div>
             </div>
+          </div>
 
-            <div class="kpi-card space-y-5" style="--kpi-color:#a78bfa">
-              <div class="flex items-center gap-3 mb-2">
-                <div class="w-8 h-8 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center">
-                  <svg class="w-4 h-4 text-violet-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </div>
-                <h3 class="font-black text-base text-white">إدارة البيانات</h3>
-              </div>
-              <div class="flex flex-wrap gap-3">
-                <button type="button" onclick="confirmResetProducts()" class="px-5 py-2.5 rounded-xl bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:border-slate-600 font-bold text-xs transition-all">
-                  إعادة ضبط المنتجات الافتراضية
-                </button>
-                <button type="button" onclick="clearAllOrders()" class="px-5 py-2.5 rounded-xl bg-rose-900/20 border border-rose-800/40 text-rose-400 hover:bg-rose-900/40 font-bold text-xs transition-all">
-                  مسح أرشيف الطلبات
-                </button>
-              </div>
+          <!-- Danger zone -->
+          <div class="panel" style="border-color:rgba(239,68,68,0.2)">
+            <div class="panel-header" style="border-color:rgba(239,68,68,0.15)">
+              <div style="font-size:14px;font-weight:900;color:#f87171">منطقة الخطر</div>
             </div>
+            <div class="panel-body" style="display:flex;gap:10px;flex-wrap:wrap">
+              <button onclick="resetProducts()" class="btn btn-danger">إعادة ضبط المنتجات الافتراضية</button>
+              <button onclick="clearAllOrders()" class="btn btn-danger">مسح أرشيف الطلبات</button>
+            </div>
+          </div>
 
-            <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-400 hover:to-teal-400 text-white font-black shadow-lg shadow-emerald-500/20 transition-all hover:scale-101">
-              حفظ جميع الإعدادات 💾
-            </button>
-          </form>
+          <button onclick="handleSaveSettings()" class="btn btn-success" style="width:100%;padding:13px;font-size:14px">
+            حفظ جميع الإعدادات 💾
+          </button>
         </div>
       </div>
 
@@ -445,377 +495,278 @@
   </main>
 </div>
 
-<!-- TOAST -->
-<div id="toast" class="toast">
-  <span id="toast-icon">✅</span>
-  <span id="toast-msg"></span>
+<!-- ══ TOAST ══ -->
+<div id="toast">
+  <span id="t-icon">✅</span>
+  <span id="t-msg"></span>
 </div>
 
 <script>
-  // ===================== STORAGE KEYS =====================
-  const KEYS = {
-    products: 'khaled_zone_products',
-    orders: 'khaled_zone_orders',
-    settings: 'khaled_zone_settings'
-  };
+// ──── STORAGE ────
+const KEYS = { products: 'khaled_zone_products', orders: 'khaled_zone_orders', settings: 'khaled_zone_settings' };
 
-  const DEFAULT_PRODUCTS = [
-    { id:'gta5-account', title:'GTA 5 Account', subTitle:'GTA V Premium + Online', price:120, oldPrice:160, badge:'الأكثر مبيعاً 🔥', image:'assets/gta5_cover.svg', category:'accounts', rating:'4.9 ★', features:['تفعيل فوري ⚡','ضمان مدى الحياة 🛡️','تغيير كامل البيانات 🔑'] },
-    { id:'fivem-account', title:'FiveM Account', subTitle:'FiveM Roleplay Ready', price:100, oldPrice:140, badge:'جديد ⚡', image:'assets/fivem_cover.svg', category:'fivem', rating:'4.8 ★', features:['جاهز للرول بلاي 🎭','تخطي الحظر 🔓','تسليم فوري 🤖'] },
-    { id:'rdr2-account', title:'RDR2 Account', subTitle:'Red Dead Redemption 2', price:150, oldPrice:200, badge:'مميز ⭐', image:'assets/rdr2_cover.svg', category:'accounts', rating:'5.0 ★', features:['طور القصة كاملاً 🤠','Red Dead Online 🐎','بيانات كاملة الملكية'] },
-    { id:'fortnite-account', title:'Fortnite Account', subTitle:'Rare Skin Collection', price:90, oldPrice:120, badge:'خصم 25% 🏷️', image:'assets/fortnite_cover.svg', category:'accounts', rating:'4.7 ★', features:['سكنات حصرية 👕','فأس نادر ⛏️','جميع المنصات 🎮'] },
-    { id:'minecraft-account', title:'Minecraft Account', subTitle:'Java & Bedrock Edition', price:70, oldPrice:100, badge:'عروض 💥', image:'assets/minecraft_cover.svg', category:'accounts', rating:'4.9 ★', features:['Java & Bedrock 🧱','تغيير الاسم والسكن','دخول Hypixel 🏰'] }
-  ];
+const DEFAULT_PRODUCTS = [
+  { id:'gta5-account', title:'GTA 5 Account', subTitle:'GTA V Premium + Online', price:120, oldPrice:160, badge:'الأكثر مبيعاً 🔥', image:'assets/gta5_cover.svg', category:'accounts', rating:'4.9 ★', features:['تفعيل فوري ⚡','ضمان مدى الحياة 🛡️','تغيير كامل البيانات 🔑'] },
+  { id:'fivem-account', title:'FiveM Account', subTitle:'FiveM Roleplay Ready', price:100, oldPrice:140, badge:'جديد ⚡', image:'assets/fivem_cover.svg', category:'fivem', rating:'4.8 ★', features:['جاهز للرول بلاي 🎭','تخطي الحظر 🔓','تسليم فوري 🤖'] },
+  { id:'rdr2-account', title:'RDR2 Account', subTitle:'Red Dead Redemption 2', price:150, oldPrice:200, badge:'مميز ⭐', image:'assets/rdr2_cover.svg', category:'accounts', rating:'5.0 ★', features:['طور القصة كاملاً 🤠','Red Dead Online 🐎','كامل الملكية'] },
+  { id:'fortnite-account', title:'Fortnite Account', subTitle:'Rare Skin Collection', price:90, oldPrice:120, badge:'خصم 25% 🏷️', image:'assets/fortnite_cover.svg', category:'accounts', rating:'4.7 ★', features:['سكنات حصرية 👕','فأس نادر ⛏️','جميع المنصات 🎮'] },
+  { id:'minecraft-account', title:'Minecraft Account', subTitle:'Java & Bedrock Edition', price:70, oldPrice:100, badge:'عروض 💥', image:'assets/minecraft_cover.svg', category:'accounts', rating:'4.9 ★', features:['Java & Bedrock 🧱','تغيير الاسم','دخول Hypixel 🏰'] }
+];
 
-  const MOCK_ORDERS = [
-    { id:'ORD-981234', date:'2026-09-01 04:21 م', items:[{title:'GTA 5 Account', price:120, quantity:1}], total:120, status:'مكتمل' },
-    { id:'ORD-765432', date:'2026-09-01 02:08 م', items:[{title:'FiveM Account', price:100, quantity:2}], total:200, status:'قيد الانتظار' },
-    { id:'ORD-543210', date:'2026-08-31 11:45 ص', items:[{title:'RDR2 Account', price:150, quantity:1}], total:150, status:'مكتمل' },
-    { id:'ORD-321098', date:'2026-08-31 09:20 ص', items:[{title:'Fortnite Account', price:90, quantity:1},{title:'Minecraft Account', price:70, quantity:1}], total:160, status:'مكتمل' },
-    { id:'ORD-112233', date:'2026-08-30 08:50 م', items:[{title:'GTA 5 Account', price:120, quantity:1}], total:120, status:'قيد الانتظار' },
-  ];
+const SEED_ORDERS = [
+  { id:'ORD-981234', date:'2026-09-01 04:21 م', items:[{title:'GTA 5 Account',price:120,quantity:1}], total:120, status:'مكتمل' },
+  { id:'ORD-765432', date:'2026-09-01 02:08 م', items:[{title:'FiveM Account',price:100,quantity:2}], total:200, status:'قيد الانتظار' },
+  { id:'ORD-543210', date:'2026-08-31 11:45 ص', items:[{title:'RDR2 Account',price:150,quantity:1}], total:150, status:'مكتمل' },
+  { id:'ORD-321098', date:'2026-08-31 09:20 ص', items:[{title:'Fortnite',price:90,quantity:1},{title:'Minecraft',price:70,quantity:1}], total:160, status:'مكتمل' },
+  { id:'ORD-112233', date:'2026-08-30 08:50 م', items:[{title:'GTA 5 Account',price:120,quantity:1}], total:120, status:'قيد الانتظار' },
+];
 
-  // ===================== STATE =====================
-  function getProducts() {
-    const stored = localStorage.getItem(KEYS.products);
-    if (!stored) { localStorage.setItem(KEYS.products, JSON.stringify(DEFAULT_PRODUCTS)); return DEFAULT_PRODUCTS; }
-    try { return JSON.parse(stored); } catch(e) { return DEFAULT_PRODUCTS; }
-  }
+function getProds() { try { const s = localStorage.getItem(KEYS.products); if(!s){localStorage.setItem(KEYS.products,JSON.stringify(DEFAULT_PRODUCTS));return DEFAULT_PRODUCTS;} return JSON.parse(s); } catch(e){return DEFAULT_PRODUCTS;} }
+function getOrders() { try { const s = localStorage.getItem(KEYS.orders); if(!s){localStorage.setItem(KEYS.orders,JSON.stringify(SEED_ORDERS));return SEED_ORDERS;} return JSON.parse(s); } catch(e){return SEED_ORDERS;} }
+function getSettings() { try { const s = localStorage.getItem(KEYS.settings); return s ? JSON.parse(s) : {phone:'201000000000',storeStatus:'active'}; } catch(e){return {phone:'201000000000',storeStatus:'active'};} }
+function saveProds(a) { localStorage.setItem(KEYS.products,JSON.stringify(a)); }
+function saveOrders(a) { localStorage.setItem(KEYS.orders,JSON.stringify(a)); }
+function saveSettings(o) { localStorage.setItem(KEYS.settings,JSON.stringify(o)); }
 
-  function getOrders() {
-    const stored = localStorage.getItem(KEYS.orders);
-    if (!stored) { localStorage.setItem(KEYS.orders, JSON.stringify(MOCK_ORDERS)); return MOCK_ORDERS; }
-    try { return JSON.parse(stored); } catch(e) { return MOCK_ORDERS; }
-  }
+// ──── TOAST ────
+function toast(msg, icon='✅') {
+  const el = document.getElementById('toast');
+  document.getElementById('t-msg').textContent = msg;
+  document.getElementById('t-icon').textContent = icon;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 3500);
+}
 
-  function getSettings() {
-    const stored = localStorage.getItem(KEYS.settings);
-    try { return stored ? JSON.parse(stored) : { phone:'201000000000', storeStatus:'active' }; }
-    catch(e) { return { phone:'201000000000', storeStatus:'active' }; }
-  }
+// ──── NAVIGATION ────
+const PAGE_NAMES = { overview:'نظرة عامة', orders:'إدارة الطلبات', products:'المنتجات والمخزون', 'add-product':'إضافة منتج', settings:'الإعدادات' };
 
-  function saveProducts(arr) { localStorage.setItem(KEYS.products, JSON.stringify(arr)); }
-  function saveOrders(arr) { localStorage.setItem(KEYS.orders, JSON.stringify(arr)); }
-  function saveSettings(obj) { localStorage.setItem(KEYS.settings, JSON.stringify(obj)); }
+function navigate(pg) {
+  ['overview','orders','products','add-product','settings'].forEach(p => {
+    const el = document.getElementById('page-'+p);
+    if(el) el.style.display = (p===pg) ? 'flex' : 'none';
+    const ni = document.querySelector(`.nav-item[onclick="navigate('${p}')"]`);
+    if(ni) ni.classList.toggle('active', p===pg);
+  });
+  document.getElementById('page-title').textContent = PAGE_NAMES[pg] || pg;
+  if(pg==='products') renderProducts();
+  if(pg==='orders') renderOrders();
+  if(pg==='settings') loadSettings();
+  window.scrollTo(0,0);
+}
 
-  // ===================== TOAST =====================
-  function toast(msg, icon = '✅') {
-    const el = document.getElementById('toast');
-    document.getElementById('toast-msg').textContent = msg;
-    document.getElementById('toast-icon').textContent = icon;
-    el.classList.add('show');
-    setTimeout(() => el.classList.remove('show'), 3200);
-  }
+// ──── KPI UPDATE ────
+function updateKPIs() {
+  const orders = getOrders(), prods = getProds();
+  const rev = orders.filter(o=>o.status==='مكتمل').reduce((s,o)=>s+o.total,0);
+  document.getElementById('kpi-rev').textContent = rev.toLocaleString();
+  document.getElementById('kpi-orders').textContent = orders.length;
+  document.getElementById('kpi-prods').textContent = prods.length;
+  document.getElementById('snav-orders').textContent = orders.length;
+  document.getElementById('snav-products').textContent = prods.length;
+}
 
-  // ===================== NAVIGATION =====================
-  const PAGES = { 'overview': 'نظرة عامة', 'orders': 'إدارة الطلبات', 'products': 'المنتجات والمخزون', 'add-product': 'إضافة منتج جديد', 'settings': 'إعدادات المتجر' };
+// ──── CHARTS ────
+let revChart, prodChart;
+function initCharts() {
+  const orders = getOrders();
+  const weekData = [320,480,150,620,780,540,890];
+  document.getElementById('week-total').textContent = weekData.reduce((a,b)=>a+b,0).toLocaleString() + ' جنيه';
 
-  function navigate(page) {
-    // Sections
-    Object.keys(PAGES).forEach(p => {
-      document.getElementById('section-' + p).classList.toggle('active', p === page);
-    });
-    // Sidebar links
-    document.querySelectorAll('.sidebar-link').forEach(el => {
-      el.classList.toggle('active', el.getAttribute('onclick') === `navigate('${page}')`);
-    });
-    document.getElementById('page-title').textContent = PAGES[page] || page;
-    if (page === 'products') renderProductsGrid();
-    if (page === 'orders') renderOrders();
-    if (page === 'settings') loadSettingsForm();
-    window.scrollTo(0, 0);
-  }
-
-  // ===================== CHARTS =====================
-  let revenueChart, productChart;
-
-  function initCharts() {
-    const orders = getOrders();
-    const days = ['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'];
-    const revenueData = [320, 480, 150, 620, 780, 540, 890];
-    const weekTotal = revenueData.reduce((a,b) => a+b, 0);
-    document.getElementById('chart-total').textContent = weekTotal.toLocaleString() + ' جنيه';
-
-    const ctx1 = document.getElementById('revenueChart').getContext('2d');
-    const gradient = ctx1.createLinearGradient(0, 0, 0, 200);
-    gradient.addColorStop(0, 'rgba(56,189,248,0.3)');
-    gradient.addColorStop(1, 'rgba(56,189,248,0)');
-
-    revenueChart = new Chart(ctx1, {
-      type: 'line',
-      data: {
-        labels: days,
-        datasets: [{
-          label: 'الإيرادات',
-          data: revenueData,
-          borderColor: '#38bdf8',
-          backgroundColor: gradient,
-          borderWidth: 2.5,
-          fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#38bdf8',
-          pointRadius: 4,
-          pointHoverRadius: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: { legend: { display: false }, tooltip: { rtl: true, callbacks: { label: ctx => ` ${ctx.raw} جنيه` } } },
-        scales: {
-          x: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { family: 'Cairo', size: 11 } } },
-          y: { grid: { color: 'rgba(255,255,255,0.04)' }, ticks: { color: '#64748b', font: { family: 'Cairo', size: 11 }, callback: v => v + ' جنيه' } }
-        }
+  // Revenue line
+  const ctx1 = document.getElementById('chart-revenue').getContext('2d');
+  const grad = ctx1.createLinearGradient(0,0,0,180);
+  grad.addColorStop(0,'rgba(56,189,248,0.25)');
+  grad.addColorStop(1,'rgba(56,189,248,0)');
+  revChart = new Chart(ctx1, {
+    type:'line',
+    data:{
+      labels:['الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'],
+      datasets:[{ data:weekData, borderColor:'#38bdf8', backgroundColor:grad, borderWidth:2.5, fill:true, tension:0.4, pointBackgroundColor:'#38bdf8', pointBorderColor:'#0f1e35', pointBorderWidth:2, pointRadius:4, pointHoverRadius:7 }]
+    },
+    options:{
+      responsive:true, plugins:{legend:{display:false}, tooltip:{rtl:true,callbacks:{label:c=>` ${c.raw} جنيه`},backgroundColor:'#0f1e35',borderColor:'#1a3050',borderWidth:1,padding:12,titleFont:{family:'Cairo'},bodyFont:{family:'Cairo'}}},
+      scales:{
+        x:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#334155',font:{family:'Cairo',size:11}}},
+        y:{grid:{color:'rgba(255,255,255,0.03)'},ticks:{color:'#334155',font:{family:'Cairo',size:11},callback:v=>v+' ج'}}
       }
-    });
-
-    const ctx2 = document.getElementById('productChart').getContext('2d');
-    const prods = getProducts();
-    productChart = new Chart(ctx2, {
-      type: 'doughnut',
-      data: {
-        labels: prods.map(p => p.title.split(' ')[0]),
-        datasets: [{
-          data: [38, 22, 18, 14, 8],
-          backgroundColor: ['#38bdf8','#a78bfa','#34d399','#fb923c','#f472b6'],
-          borderColor: '#1e293b',
-          borderWidth: 2.5,
-          hoverOffset: 6
-        }]
-      },
-      options: {
-        responsive: true,
-        cutout: '72%',
-        plugins: {
-          legend: { position: 'bottom', labels: { color: '#94a3b8', font: { family: 'Cairo', size: 11 }, padding: 12, boxWidth: 10 } }
-        }
-      }
-    });
-  }
-
-  // ===================== ORDERS TABLE =====================
-  function renderOrders() {
-    const search = (document.getElementById('order-search')?.value || '').toLowerCase();
-    const statusFilter = document.getElementById('order-status-filter')?.value || '';
-    let orders = getOrders();
-
-    if (search) orders = orders.filter(o => o.id.toLowerCase().includes(search));
-    if (statusFilter) orders = orders.filter(o => o.status === statusFilter);
-
-    const tbody = document.getElementById('orders-main-body');
-    const empty = document.getElementById('orders-empty');
-
-    if (orders.length === 0) {
-      tbody.innerHTML = '';
-      empty.classList.remove('hidden');
-      return;
     }
-    empty.classList.add('hidden');
+  });
 
-    tbody.innerHTML = orders.map(o => `
-      <tr class="table-row group">
-        <td class="px-6 py-4">
-          <span class="font-black text-sm text-cyan-400 font-mono">${o.id}</span>
-        </td>
-        <td class="px-6 py-4 text-sm text-slate-400">${o.date}</td>
-        <td class="px-6 py-4">
-          <div class="text-sm text-white font-semibold">${o.items.map(i => i.title).join(', ')}</div>
-          <div class="text-xs text-slate-500 mt-0.5">${o.items.map(i => `×${i.quantity}`).join(' ')} عنصر</div>
-        </td>
-        <td class="px-6 py-4">
-          <span class="font-black text-base text-amber-400">${o.total} جنيه</span>
-        </td>
-        <td class="px-6 py-4">
-          ${o.status === 'مكتمل'
-            ? '<span class="badge bg-emerald-900/50 text-emerald-400 border border-emerald-800/60">✓ مكتمل</span>'
-            : '<span class="badge bg-amber-900/50 text-amber-400 border border-amber-800/60">⏳ قيد الانتظار</span>'
-          }
-        </td>
-        <td class="px-6 py-4">
-          <div class="flex items-center justify-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button onclick="toggleOrderStatus('${o.id}')" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold transition-all">تغيير</button>
-            <button onclick="deleteOrder('${o.id}')" class="px-3 py-1.5 rounded-lg bg-rose-900/40 hover:bg-rose-900/70 text-rose-400 text-xs font-bold transition-all">حذف</button>
-          </div>
-        </td>
-      </tr>
-    `).join('');
-  }
+  // Products doughnut
+  const ctx2 = document.getElementById('chart-products').getContext('2d');
+  const prods = getProds();
+  prodChart = new Chart(ctx2, {
+    type:'doughnut',
+    data:{
+      labels: prods.map(p=>p.title.split(' ')[0]),
+      datasets:[{ data:[38,22,18,14,8], backgroundColor:['#38bdf8','#a78bfa','#34d399','#fb923c','#f472b6'], borderColor:'#0f1e35', borderWidth:3, hoverOffset:8 }]
+    },
+    options:{
+      responsive:true, cutout:'74%',
+      plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{family:'Cairo',size:11},padding:10,boxWidth:8,usePointStyle:true,pointStyleWidth:8}},tooltip:{rtl:true,backgroundColor:'#0f1e35',borderColor:'#1a3050',borderWidth:1,padding:10,titleFont:{family:'Cairo'},bodyFont:{family:'Cairo'}}}
+    }
+  });
+}
 
-  function renderRecentOrders() {
-    const orders = getOrders().slice(0, 5);
-    const tbody = document.getElementById('recent-orders-body');
-    tbody.innerHTML = orders.map(o => `
-      <tr class="table-row">
-        <td class="py-3 text-xs font-black text-cyan-400 font-mono">${o.id}</td>
-        <td class="py-3 text-sm text-white font-semibold">${o.items.map(i => i.title.split(' ')[0]).join(', ')}</td>
-        <td class="py-3 font-black text-amber-400">${o.total} جنيه</td>
-        <td class="py-3">
-          ${o.status === 'مكتمل'
-            ? '<span class="badge bg-emerald-900/50 text-emerald-400">✓ مكتمل</span>'
-            : '<span class="badge bg-amber-900/50 text-amber-400">⏳ انتظار</span>'
-          }
-        </td>
-        <td class="py-3 text-xs text-slate-500">${o.date}</td>
-      </tr>
-    `).join('');
-  }
+// ──── RECENT ORDERS (overview) ────
+function renderRecentOrders() {
+  const orders = getOrders().slice(0,5);
+  const tb = document.getElementById('recent-orders');
+  if(!tb) return;
+  tb.innerHTML = orders.map(o=>`
+    <tr>
+      <td><span style="font-family:monospace;font-weight:900;color:#38bdf8;font-size:13px">${o.id}</span></td>
+      <td style="color:white;font-weight:700">${o.items.map(i=>i.title.split(' ')[0]).join(', ')}</td>
+      <td><span style="font-weight:900;color:#fbbf24">${o.total} جنيه</span></td>
+      <td>${o.status==='مكتمل'?'<span class="badge badge-green">✓ مكتمل</span>':'<span class="badge badge-amber">⏳ انتظار</span>'}</td>
+      <td style="color:#475569;font-size:12px">${o.date}</td>
+    </tr>
+  `).join('');
+}
 
-  function toggleOrderStatus(id) {
-    const orders = getOrders().map(o => {
-      if (o.id === id) o.status = o.status === 'مكتمل' ? 'قيد الانتظار' : 'مكتمل';
-      return o;
-    });
-    saveOrders(orders);
-    renderOrders();
-    renderRecentOrders();
-    toast('تم تحديث حالة الطلب');
-  }
-
-  function deleteOrder(id) {
-    const orders = getOrders().filter(o => o.id !== id);
-    saveOrders(orders);
-    renderOrders();
-    renderRecentOrders();
-    updateKPIs();
-    toast('تم حذف الطلب', '🗑️');
-  }
-
-  function clearAllOrders() {
-    if (!confirm('هل أنت متأكد من مسح جميع الطلبات؟')) return;
-    saveOrders([]);
-    renderOrders();
-    renderRecentOrders();
-    updateKPIs();
-    toast('تم مسح أرشيف الطلبات', '🗑️');
-  }
-
-  // ===================== PRODUCTS GRID =====================
-  const CATEGORY_COLORS = { accounts: '#38bdf8', fivem: '#fb923c', services: '#a78bfa' };
-  const CATEGORY_LABELS = { accounts: 'حسابات', fivem: 'FiveM', services: 'خدمات' };
-
-  function renderProductsGrid() {
-    const prods = getProducts();
-    const grid = document.getElementById('products-grid');
-    grid.innerHTML = prods.map(p => `
-      <div class="kpi-card flex flex-col justify-between" style="--kpi-color:${CATEGORY_COLORS[p.category] || '#38bdf8'}">
-        <div class="flex items-start gap-4 mb-5">
-          <img src="${p.image}" alt="${p.title}" class="w-16 h-16 rounded-2xl object-cover border border-slate-700 bg-slate-900 flex-shrink-0">
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center gap-2 mb-1">
-              <span class="badge text-[10px]" style="background:${CATEGORY_COLORS[p.category]}15; color:${CATEGORY_COLORS[p.category]}; border: 1px solid ${CATEGORY_COLORS[p.category]}30">${CATEGORY_LABELS[p.category] || p.category}</span>
-            </div>
-            <h4 class="font-black text-white text-base leading-snug truncate">${p.title}</h4>
-            <p class="text-xs text-slate-500 mt-0.5 truncate">${p.subTitle}</p>
-          </div>
+// ──── ORDERS PAGE ────
+function renderOrders() {
+  const q = (document.getElementById('order-q')?.value||'').toLowerCase();
+  const f = document.getElementById('order-filter')?.value||'';
+  let orders = getOrders();
+  if(q) orders = orders.filter(o=>o.id.toLowerCase().includes(q)||o.items.some(i=>i.title.toLowerCase().includes(q)));
+  if(f) orders = orders.filter(o=>o.status===f);
+  const tb = document.getElementById('orders-body');
+  const empty = document.getElementById('orders-empty');
+  if(!tb) return;
+  if(!orders.length){tb.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tb.innerHTML = orders.map(o=>`
+    <tr class="group">
+      <td><span style="font-family:monospace;font-weight:900;color:#38bdf8;font-size:13px">${o.id}</span></td>
+      <td style="color:#64748b;font-size:12px">${o.date}</td>
+      <td>
+        <div style="font-weight:700;color:white;font-size:13px">${o.items.map(i=>i.title).join('، ')}</div>
+        <div style="font-size:11px;color:#334155;margin-top:2px">${o.items.reduce((s,i)=>s+i.quantity,0)} عنصر</div>
+      </td>
+      <td><span style="font-weight:900;color:#fbbf24;font-size:15px">${o.total} جنيه</span></td>
+      <td>${o.status==='مكتمل'?'<span class="badge badge-green">✓ مكتمل</span>':'<span class="badge badge-amber">⏳ قيد الانتظار</span>'}</td>
+      <td style="text-align:center">
+        <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+          <button onclick="toggleStatus('${o.id}')" class="btn btn-ghost btn-sm" style="padding:6px 12px;font-size:11px">تغيير الحالة</button>
+          <button onclick="deleteOrder('${o.id}')" class="btn btn-danger btn-sm" style="padding:6px 12px;font-size:11px">حذف</button>
         </div>
-        <div class="space-y-3 mb-5">
-          <div class="flex items-center justify-between">
-            <span class="text-xs text-slate-500">السعر الحالي</span>
-            <div class="flex items-center gap-2">
-              ${p.oldPrice ? `<span class="text-xs text-slate-600 line-through">${p.oldPrice} جنيه</span>` : ''}
-              <span class="font-black text-lg text-amber-400">${p.price} جنيه</span>
-            </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function toggleStatus(id) {
+  const orders = getOrders().map(o=>{if(o.id===id)o.status=o.status==='مكتمل'?'قيد الانتظار':'مكتمل';return o;});
+  saveOrders(orders); renderOrders(); renderRecentOrders(); updateKPIs(); toast('تم تحديث حالة الطلب');
+}
+function deleteOrder(id) {
+  saveOrders(getOrders().filter(o=>o.id!==id)); renderOrders(); renderRecentOrders(); updateKPIs(); toast('تم حذف الطلب','🗑️');
+}
+function clearAllOrders() {
+  if(!confirm('مسح جميع الطلبات؟')) return;
+  saveOrders([]); renderOrders(); renderRecentOrders(); updateKPIs(); toast('تم مسح أرشيف الطلبات','🗑️');
+}
+
+// ──── PRODUCTS PAGE ────
+const CAT_COLORS = { accounts:'#38bdf8', fivem:'#fb923c', services:'#a78bfa' };
+const CAT_LABELS = { accounts:'حسابات', fivem:'FiveM', services:'خدمات' };
+
+function renderProducts() {
+  const prods = getProds();
+  const grid = document.getElementById('products-grid');
+  if(!grid) return;
+  grid.innerHTML = prods.map(p=>`
+    <div class="prod-admin-card">
+      <div style="display:flex;align-items:center;gap:12px">
+        <img src="${p.image}" style="width:52px;height:52px;border-radius:12px;object-fit:cover;border:1px solid #1a3050;background:#060d1a;flex-shrink:0">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
+            <span style="font-size:10px;font-weight:900;padding:2px 8px;border-radius:5px;background:${CAT_COLORS[p.category]||'#38bdf8'}18;color:${CAT_COLORS[p.category]||'#38bdf8'};border:1px solid ${CAT_COLORS[p.category]||'#38bdf8'}30">${CAT_LABELS[p.category]||p.category}</span>
           </div>
-          ${p.badge ? `<div class="text-xs text-slate-400 bg-slate-900/60 border border-slate-700 px-3 py-1.5 rounded-lg font-semibold">${p.badge}</div>` : ''}
-        </div>
-        <div class="flex gap-2 pt-3 border-t border-slate-800">
-          <button onclick="editProductPrice('${p.id}')" class="flex-1 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white text-xs font-bold transition-all">تعديل السعر</button>
-          <button onclick="deleteProduct('${p.id}')" class="px-4 py-2 rounded-lg bg-rose-900/30 hover:bg-rose-900/60 text-rose-400 text-xs font-bold transition-all">حذف</button>
+          <div style="font-weight:900;color:white;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.title}</div>
+          <div style="font-size:11.5px;color:#334155;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${p.subTitle}</div>
         </div>
       </div>
-    `).join('');
-  }
+      <hr class="divider">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div>
+          ${p.oldPrice?`<div style="font-size:11px;color:#334155;text-decoration:line-through">${p.oldPrice} جنيه</div>`:''}
+          <div style="font-weight:900;color:#fbbf24;font-size:17px">${p.price} جنيه</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button onclick="editPrice('${p.id}')" class="btn btn-ghost btn-sm" style="padding:7px 12px;font-size:11px">تعديل السعر</button>
+          <button onclick="deleteProd('${p.id}')" class="btn btn-danger btn-sm" style="padding:7px 12px;font-size:11px">حذف</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
 
-  function editProductPrice(id) {
-    const prods = getProducts();
-    const prod = prods.find(p => p.id === id);
-    if (!prod) return;
-    const newPrice = prompt(`السعر الجديد لـ ${prod.title} (الحالي: ${prod.price} جنيه):`, prod.price);
-    if (!newPrice || isNaN(Number(newPrice))) return;
-    prod.price = Number(newPrice);
-    saveProducts(prods);
-    renderProductsGrid();
-    toast(`تم تحديث سعر ${prod.title} إلى ${prod.price} جنيه`);
-  }
+function editPrice(id) {
+  const prods = getProds(), p = prods.find(x=>x.id===id);
+  if(!p) return;
+  const v = prompt(`السعر الجديد لـ ${p.title} (الحالي: ${p.price}):`,''+p.price);
+  if(!v||isNaN(+v)) return;
+  p.price = +v; saveProds(prods); renderProducts(); toast(`تم تحديث سعر ${p.title}`);
+}
 
-  function deleteProduct(id) {
-    if (!confirm('هل أنت متأكد من حذف هذا المنتج من المتجر؟')) return;
-    const prods = getProducts().filter(p => p.id !== id);
-    saveProducts(prods);
-    renderProductsGrid();
-    updateKPIs();
-    toast('تم حذف المنتج من المتجر', '🗑️');
-  }
+function deleteProd(id) {
+  if(!confirm('حذف هذا المنتج؟')) return;
+  saveProds(getProds().filter(p=>p.id!==id)); renderProducts(); updateKPIs(); toast('تم حذف المنتج','🗑️');
+}
 
-  function confirmResetProducts() {
-    if (!confirm('سيتم إعادة ضبط المنتجات للقائمة الافتراضية. هل أنت متأكد؟')) return;
-    saveProducts(DEFAULT_PRODUCTS);
-    renderProductsGrid();
-    updateKPIs();
-    toast('تمت إعادة ضبط المنتجات الافتراضية');
-  }
+function resetProducts() {
+  if(!confirm('إعادة ضبط المنتجات للقائمة الافتراضية؟')) return;
+  saveProds(DEFAULT_PRODUCTS); renderProducts(); updateKPIs(); toast('تمت إعادة ضبط المنتجات');
+}
 
-  // ===================== ADD PRODUCT =====================
-  function handleCreateProduct(e) {
-    e.preventDefault();
-    const newProd = {
-      id: 'prod-' + Date.now(),
-      title: document.getElementById('f-title').value.trim(),
-      subTitle: document.getElementById('f-subtitle').value.trim(),
-      price: Number(document.getElementById('f-price').value),
-      oldPrice: Number(document.getElementById('f-oldprice').value) || null,
-      badge: document.getElementById('f-badge').value.trim() || 'جديد ⚡',
-      category: document.getElementById('f-category').value,
-      image: document.getElementById('f-image').value.trim() || 'assets/gta5_cover.svg',
-      rating: '5.0 ★',
-      features: document.getElementById('f-features').value.split('\n').map(s => s.trim()).filter(Boolean)
-    };
-    const prods = getProducts();
-    prods.unshift(newProd);
-    saveProducts(prods);
-    document.getElementById('product-form').reset();
-    updateKPIs();
-    toast(`تمت إضافة "${newProd.title}" للمتجر 🚀`);
-    navigate('products');
-  }
+// ──── ADD PRODUCT ────
+function handleCreate(e) {
+  e.preventDefault();
+  const p = {
+    id:'prod-'+Date.now(),
+    title:document.getElementById('f-title').value.trim(),
+    subTitle:document.getElementById('f-sub').value.trim(),
+    price:+document.getElementById('f-price').value,
+    oldPrice:+document.getElementById('f-old').value||null,
+    badge:document.getElementById('f-badge').value.trim()||'جديد ⚡',
+    category:document.getElementById('f-cat').value,
+    image:document.getElementById('f-img').value.trim()||'assets/gta5_cover.svg',
+    rating:'5.0 ★',
+    features:document.getElementById('f-feat').value.split('\n').map(s=>s.trim()).filter(Boolean)
+  };
+  const prods = getProds(); prods.unshift(p); saveProds(prods);
+  document.getElementById('product-form').reset();
+  updateKPIs();
+  toast(`تمت إضافة "${p.title}" للمتجر 🚀`);
+  navigate('products');
+}
 
-  // ===================== SETTINGS =====================
-  function loadSettingsForm() {
-    const s = getSettings();
-    document.getElementById('s-phone').value = s.phone || '201000000000';
-    document.getElementById('s-status').value = s.storeStatus || 'active';
-  }
+// ──── SETTINGS ────
+function loadSettings() {
+  const s = getSettings();
+  document.getElementById('s-phone').value = s.phone||'201000000000';
+  document.getElementById('s-status').value = s.storeStatus||'active';
+}
+function handleSaveSettings() {
+  saveSettings({phone:document.getElementById('s-phone').value,storeStatus:document.getElementById('s-status').value});
+  toast('تم حفظ الإعدادات 💾');
+}
 
-  function handleSaveSettings(e) {
-    e.preventDefault();
-    saveSettings({ phone: document.getElementById('s-phone').value, storeStatus: document.getElementById('s-status').value });
-    toast('تم حفظ إعدادات المتجر بنجاح 💾');
-  }
+// ──── CLOCK ────
+function tick() { document.getElementById('live-clock').textContent = new Date().toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit',second:'2-digit'}); }
 
-  // ===================== KPI UPDATE =====================
-  function updateKPIs() {
-    const orders = getOrders();
-    const prods = getProducts();
-    const revenue = orders.filter(o => o.status === 'مكتمل').reduce((s, o) => s + o.total, 0);
-    document.getElementById('kpi-revenue').textContent = revenue.toLocaleString() + ' جنيه';
-    document.getElementById('kpi-orders').textContent = orders.length;
-    document.getElementById('kpi-products').textContent = prods.length;
-    document.getElementById('nav-orders-count').textContent = orders.length;
-    document.getElementById('nav-products-count').textContent = prods.length;
-  }
-
-  // ===================== CLOCK =====================
-  function updateClock() {
-    document.getElementById('live-time').textContent = new Date().toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-  }
-
-  // ===================== INIT =====================
-  document.addEventListener('DOMContentLoaded', () => {
-    updateKPIs();
-    renderRecentOrders();
-    initCharts();
-    updateClock();
-    setInterval(updateClock, 1000);
-  });
+// ──── INIT ────
+document.addEventListener('DOMContentLoaded', ()=>{
+  updateKPIs();
+  renderRecentOrders();
+  initCharts();
+  tick();
+  setInterval(tick, 1000);
+  // Set pages to flex for the active one
+  document.getElementById('page-overview').style.display = 'flex';
+});
 </script>
 </body>
 </html>
