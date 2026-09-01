@@ -1,8 +1,10 @@
-// KHALED ZONE - Interactive UI Logic & State Management
+// KHALED ZONE - Multi-page App Logic & Cart State Management
 
 document.addEventListener('DOMContentLoaded', () => {
-  // State
-  let cart = [];
+  // State from localStorage
+  let cart = JSON.parse(localStorage.getItem('khaled_zone_cart') || '[]');
+
+  // DOM Elements
   const cartBadge = document.getElementById('cart-badge');
   const cartDrawer = document.getElementById('cart-drawer');
   const cartOverlay = document.getElementById('cart-overlay');
@@ -13,46 +15,50 @@ document.addEventListener('DOMContentLoaded', () => {
   const searchResults = document.getElementById('search-results');
   const productModal = document.getElementById('product-modal');
 
-  // Sample Products Data
-  const products = [
+  // Master Products Data
+  window.products = [
     {
       id: 'gta5-account',
       title: 'GTA 5 Account',
       subTitle: 'GTAH ECCIDA COME V / GTA 5 Argaent',
       price: 120,
+      oldPrice: 160,
       badge: 'الأكثر مبيعاً 🔥',
       image: 'assets/gta5_cover.svg',
       category: 'accounts',
       rating: '4.9 ★',
-      features: ['تفعيل فوري ⚡', 'ضمان مدى الحياة 🛡️', 'حساب كامل الملكية 👑', 'لعبة GTA V + GTA Online']
+      features: ['تفعيل فوري ⚡', 'ضمان مدى الحياة 🛡️', 'حساب كامل الملكية 👑', 'لعبة GTA V + GTA Online', 'إمكانية تغيير جميع البيانات 🔑']
     },
     {
       id: 'fivem-account',
       title: 'FiveM Account',
       subTitle: 'FiveM Fliccount / FiveM حساب',
       price: 100,
+      oldPrice: 140,
       badge: 'جديد ⚡',
       image: 'assets/fivem_cover.svg',
       category: 'fivem',
       rating: '4.8 ★',
-      features: ['جاهز للرول بلاي 🎭', 'تخطي حظر السيرفرات 🔓', 'تسليم آلي 🤖', 'دعم سيرفرات عربية']
+      features: ['جاهز للرول بلاي 🎭', 'تخطي حظر السيرفرات 🔓', 'تسليم آلي 🤖', 'دعم سيرفرات عربية وغربية']
     },
     {
       id: 'rdr2-account',
       title: 'RDR2 Account',
       subTitle: 'Red Dead Redemption 2',
       price: 150,
+      oldPrice: 200,
       badge: 'مميز ⭐',
       image: 'assets/rdr2_cover.svg',
       category: 'accounts',
       rating: '5.0 ★',
-      features: ['نموذج القصة كامل 🤠', 'Red Dead Online 🐎', 'بيانات تغيير كاملة 🔑', 'تسليم آلي ⚡']
+      features: ['طور القصة كامل 🤠', 'Red Dead Online 🐎', 'بيانات تغيير كاملة 🔑', 'تسليم آلي ⚡']
     },
     {
       id: 'fortnite-account',
       title: 'Fortnite Account',
       subTitle: 'Fortnite Skin Account',
       price: 90,
+      oldPrice: 120,
       badge: 'خصم 20% 🏷️',
       image: 'assets/fortnite_cover.svg',
       category: 'accounts',
@@ -64,6 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
       title: 'Minecraft Account',
       subTitle: 'Minecraft Java & Bedrock',
       price: 70,
+      oldPrice: 100,
       badge: 'عروض 💥',
       image: 'assets/minecraft_cover.svg',
       category: 'accounts',
@@ -74,7 +81,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Global Functions Attached to Window for HTML Handlers
   window.addToCart = function (productId) {
-    const item = products.find(p => p.id === productId);
+    const item = window.products.find(p => p.id === productId);
     if (!item) return;
 
     const existingIndex = cart.findIndex(ci => ci.id === productId);
@@ -84,17 +91,20 @@ document.addEventListener('DOMContentLoaded', () => {
       cart.push({ ...item, quantity: 1 });
     }
 
+    saveCart();
     updateCartUI();
     showToast(`تمت إضافة "${item.title}" إلى السلة بنجاح! 🛒`);
   };
 
   window.removeFromCart = function (productId) {
     cart = cart.filter(item => item.id !== productId);
+    saveCart();
     updateCartUI();
     showToast('تم إزالة المنتج من السلة');
   };
 
   window.toggleCart = function () {
+    if (!cartDrawer || !cartOverlay) return;
     if (cartDrawer.classList.contains('translate-x-full')) {
       cartDrawer.classList.remove('translate-x-full');
       cartOverlay.classList.remove('hidden');
@@ -105,38 +115,17 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   window.toggleSearchModal = function () {
+    if (!searchModal) return;
     if (searchModal.classList.contains('hidden')) {
       searchModal.classList.remove('hidden');
-      searchInput.focus();
+      if (searchInput) searchInput.focus();
     } else {
       searchModal.classList.add('hidden');
     }
   };
 
   window.openProductModal = function (productId) {
-    const item = products.find(p => p.id === productId);
-    if (!item) return;
-
-    document.getElementById('modal-title').textContent = item.title;
-    document.getElementById('modal-subtitle').textContent = item.subTitle;
-    document.getElementById('modal-price').textContent = `${item.price} جنيه`;
-    document.getElementById('modal-badge').textContent = item.badge;
-    document.getElementById('modal-img').src = item.image;
-    
-    const featuresList = document.getElementById('modal-features');
-    featuresList.innerHTML = item.features.map(f => `<li class="flex items-center gap-2"><span class="text-cyan-400">✓</span> ${f}</li>`).join('');
-
-    const buyBtn = document.getElementById('modal-buy-btn');
-    buyBtn.onclick = () => {
-      window.addToCart(item.id);
-      window.closeProductModal();
-    };
-
-    productModal.classList.remove('hidden');
-  };
-
-  window.closeProductModal = function () {
-    productModal.classList.add('hidden');
+    window.location.href = `product.html?id=${productId}`;
   };
 
   window.checkout = function () {
@@ -145,14 +134,22 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
     const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+    const orderDetails = cart.map(i => `• ${i.title} (${i.quantity}x) - ${i.price * i.quantity} جنيه`).join('%0A');
+    const waUrl = `https://wa.me/201000000000?text=مرحباً%20KLIX%20!%20أريد%20إتمام%20طلب%20من%20KHALED%20ZONE:%0A${orderDetails}%0A%0Aالإجمالي:%20${total}%20جنيه`;
+    
     alert(`🎉 شكراً لطلبك من KHALED ZONE!\n\nإجمالي الطلب: ${total} جنيه\nسيتم توجيهك الآن للواتساب لتأكيد الاستلام الفوري.`);
     cart = [];
+    saveCart();
     updateCartUI();
-    window.toggleCart();
+    window.open(waUrl, '_blank');
   };
 
-  // Helper Functions
+  function saveCart() {
+    localStorage.setItem('khaled_zone_cart', JSON.stringify(cart));
+  }
+
   function updateCartUI() {
+    if (!cartBadge) return;
     const totalCount = cart.reduce((sum, item) => sum + item.quantity, 0);
     cartBadge.textContent = totalCount;
 
@@ -163,6 +160,8 @@ document.addEventListener('DOMContentLoaded', () => {
       cartBadge.classList.remove('bg-orange-500', 'badge-pulse');
       cartBadge.classList.add('bg-gray-700');
     }
+
+    if (!cartItemsContainer || !cartTotalEl) return;
 
     if (cart.length === 0) {
       cartItemsContainer.innerHTML = `
@@ -217,19 +216,19 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Live Search Handler
-  if (searchInput) {
+  if (searchInput && searchResults) {
     searchInput.addEventListener('input', (e) => {
       const query = e.target.value.toLowerCase().trim();
       if (!query) {
         searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">اكتب اسم اللعبة أو الخدمة للبحث...</p>';
         return;
       }
-      const filtered = products.filter(p => p.title.toLowerCase().includes(query) || p.subTitle.toLowerCase().includes(query));
+      const filtered = window.products.filter(p => p.title.toLowerCase().includes(query) || p.subTitle.toLowerCase().includes(query));
       if (filtered.length === 0) {
         searchResults.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">لم يتم العثور على نتائج</p>';
       } else {
         searchResults.innerHTML = filtered.map(p => `
-          <div onclick="openProductModal('${p.id}'); toggleSearchModal();" class="flex items-center justify-between p-3 hover:bg-cyan-950/60 rounded-xl cursor-pointer border border-transparent hover:border-cyan-500/30 transition">
+          <a href="product.html?id=${p.id}" class="flex items-center justify-between p-3 hover:bg-cyan-950/60 rounded-xl cursor-pointer border border-transparent hover:border-cyan-500/30 transition">
             <div class="flex items-center gap-3">
               <img src="${p.image}" class="w-10 h-10 rounded-lg object-cover">
               <div>
@@ -238,9 +237,12 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
             <div class="text-cyan-400 font-bold text-sm">${p.price} جنيه</div>
-          </div>
+          </a>
         `).join('');
       }
     });
   }
+
+  // Initialize UI
+  updateCartUI();
 });
