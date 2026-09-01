@@ -1156,6 +1156,7 @@ function tick() { document.getElementById('live-clock').textContent = new Date()
 document.addEventListener('DOMContentLoaded', ()=>{
   updateKPIs();
   renderRecentOrders();
+  renderCoupons();
   initCharts();
   tick();
   setInterval(tick, 1000);
